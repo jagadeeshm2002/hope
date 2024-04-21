@@ -221,6 +221,7 @@ export function Header() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
+  const jagadeesh = true
 
   React.useEffect(() => {
     window.addEventListener(
