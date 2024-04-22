@@ -6,15 +6,19 @@ import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from "@material-tailwind/react";
 import { Provider } from 'react-redux';
 import { store } from './store';
+import { BrowserRouter } from 'react-router-dom';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <BrowserRouter>
     <Provider store={store}>
 
     <ThemeProvider>
       <App />
     </ThemeProvider>
     </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
