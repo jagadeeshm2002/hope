@@ -20,16 +20,18 @@ const userSchema = new mongoose.Schema(
       minlength: 7,
       trim: true,
     },
-    address: [
-      {
-        city: String,
-        street: String,
-        houseNumber: String,
-        pinCode:Number,
-        state: String,
-        nearBy: String,
-      },
-    ],
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    PhoneNumber: {
+      type: String,
+    },
+    updated: Date,
+    created: {
+      type: Date,
+      default: Date.now,
+    },
     tokens: [
       {
         token: {
@@ -43,3 +45,5 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+module.exports = mongoose.model("User", userSchema);
