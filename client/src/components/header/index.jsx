@@ -11,32 +11,27 @@ import {
   Avatar,
   Card,
   IconButton,
+  Input,
 } from "@material-tailwind/react";
 import {
-  CubeTransparentIcon,
-  UserCircleIcon,
-  CodeBracketSquareIcon,
-  Square3Stack3DIcon,
   ChevronDownIcon,
-  PowerIcon,
-  RocketLaunchIcon,
   Bars2Icon,
+  UserIcon,
+  TruckIcon,
+  CreditCardIcon,
+  PhoneIcon,
   ShoppingBagIcon,
-  HeartIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
 
 // profile menu component
-const profileMenuItems = [
+const profileMenuUser = [
   {
     label: "Dashboard",
-    icon: UserCircleIcon,
   },
   {
     label: "Sign Out",
-    icon: PowerIcon,
   },
-  { label: "Login In" },
-  { lable: "Sign Up" },
 ];
 const ProfileMenuGuest = [{ label: "Login In" }, { lable: "Sign Up" }];
 
@@ -51,15 +46,9 @@ function ProfileMenu() {
         <Button
           variant="text"
           color="blue-gray"
-          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-5"
         >
-          <Avatar
-            variant="circular"
-            size="sm"
-            alt="tania andrew"
-            className="border border-gray-900 p-0.5"
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-          />
+          <UserIcon className="h-8 w-8 border border-gray-900 p-0.5 rounded-3xl" />
           <ChevronDownIcon
             strokeWidth={2.5}
             className={`h-3 w-3 transition-transform ${
@@ -69,27 +58,19 @@ function ProfileMenu() {
         </Button>
       </MenuHandler>
       <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon }, key) => {
-          const isLastItem = key === profileMenuItems.length - 1;
+        {profileMenuUser.map(({ label }, key) => {
+          const isLastItem = key === profileMenuUser.length - 1;
           return (
             <MenuItem
               key={label}
               onClick={closeMenu}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
-              }`}
+              className={`flex items-center gap-2 rounded`}
             >
-              {React.createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
-                strokeWidth: 2,
-              })}
               <Typography
                 as="span"
                 variant="small"
                 className="font-normal"
-                color={isLastItem ? "red" : "inherit"}
+                color="inherit"
               >
                 {label}
               </Typography>
@@ -102,103 +83,24 @@ function ProfileMenu() {
 }
 
 // nav list menu
-const navListMenuItems = [
-  {
-    title: "@material-tailwind/html",
-    description:
-      "Learn how to use @material-tailwind/html, packed with rich components and widgets.",
-  },
-  {
-    title: "@material-tailwind/react",
-    description:
-      "Learn how to use @material-tailwind/react, packed with rich components for React.",
-  },
-  {
-    title: "Material Tailwind PRO",
-    description:
-      "A complete set of UI Elements for building faster websites in less time.",
-  },
-];
-
-function NavListMenu() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-  const renderItems = navListMenuItems.map(({ title, description }) => (
-    <a href="#" key={title}>
-      <MenuItem>
-        <Typography variant="h6" color="blue-gray" className="mb-1">
-          {title}
-        </Typography>
-        <Typography variant="small" color="gray" className="font-normal">
-          {description}
-        </Typography>
-      </MenuItem>
-    </a>
-  ));
-
-  return (
-    <React.Fragment>
-      <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>
-        <MenuHandler>
-          <Typography as="a" href="#" variant="small" className="font-normal">
-            <MenuItem className="hidden items-center gap-2 font-medium text-blue-gray-900 lg:flex lg:rounded-full">
-              <Square3Stack3DIcon className="h-[18px] w-[18px] text-blue-gray-500" />{" "}
-              Pages{" "}
-              <ChevronDownIcon
-                strokeWidth={2}
-                className={`h-3 w-3 transition-transform ${
-                  isMenuOpen ? "rotate-180" : ""
-                }`}
-              />
-            </MenuItem>
-          </Typography>
-        </MenuHandler>
-        <MenuList className="hidden w-[36rem] grid-cols-7 gap-3 overflow-visible lg:grid">
-          <Card
-            color="blue"
-            shadow={false}
-            variant="gradient"
-            className="col-span-3 grid h-full w-full place-items-center rounded-md"
-          >
-            <RocketLaunchIcon strokeWidth={1} className="h-28 w-28" />
-          </Card>
-          <ul className="col-span-4 flex w-full flex-col gap-1">
-            {renderItems}
-          </ul>
-        </MenuList>
-      </Menu>
-      <MenuItem className="flex items-center gap-2 font-medium text-blue-gray-900 lg:hidden">
-        <Square3Stack3DIcon className="h-[18px] w-[18px] text-blue-gray-500" />{" "}
-        Pages{" "}
-      </MenuItem>
-      <ul className="ml-6 flex w-full flex-col gap-1 lg:hidden">
-        {renderItems}
-      </ul>
-    </React.Fragment>
-  );
-}
 
 // nav list component
 const navListItems = [
   {
-    label: "Account",
-    icon: UserCircleIcon,
+    label: "Men",
   },
   {
-    label: "Blocks",
-    icon: CubeTransparentIcon,
+    label: "Women",
   },
   {
-    label: "Docs",
-    icon: CodeBracketSquareIcon,
+    label: "kids",
   },
 ];
 
 function NavList() {
   return (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
-      <NavListMenu />
-      {navListItems.map(({ label, icon }, key) => (
+      {navListItems.map(({ label }, key) => (
         <Typography
           key={label}
           as="a"
@@ -208,7 +110,6 @@ function NavList() {
           className="font-medium text-blue-gray-500"
         >
           <MenuItem className="flex items-center gap-2 lg:rounded-full">
-            {React.createElement(icon, { className: "h-[18px] w-[18px]" })}{" "}
             <span className="text-gray-900"> {label}</span>
           </MenuItem>
         </Typography>
@@ -221,7 +122,7 @@ export function Header() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
-  const jagadeesh = true
+  const cartItemsCount = 5;
 
   React.useEffect(() => {
     window.addEventListener(
@@ -231,36 +132,75 @@ export function Header() {
   }, []);
 
   return (
-    <Navbar className="mx-auto max-w-screen-xl p-2 lg:rounded-full lg:pl-6">
-      <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          className="mr-4 ml-2 cursor-pointer py-1.5 font-medium"
-        >
-          Material Tailwind
-        </Typography>
-        <div className="hidden lg:block">
-          <NavList />
+    <header className="shadow">
+      <div className="bg-gray-900  flex items-center mx-auto justify-center">
+        <div className="flex items-center max-w-screen-xl justify-between text-blue-gray-900 md:gap-32 lg:gap-48 xl:gap-72 transition-all ">
+          <span className="hidden md:flex items-center text-gray-100 ">
+            <TruckIcon className="h-4 w-4 mr-1" color="white" /> free Shipping
+          </span>
+          <span className="hidden md:flex items-center text-gray-100">
+            <CreditCardIcon className="h-4 w-4 mr-1" color="white" /> Payment
+            Methods
+          </span>
+          <span className="hidden md:flex items-center text-gray-100">
+            <PhoneIcon className="h-4 w-4 mr-1" color="white" /> Call us
+            951-999-9999
+          </span>
+          <span className="flex md:hidden items-center text-gray-100">
+            <PhoneIcon className="h-4 w-4 mr-1" color="white" /> Need advice?
+            Call us 951-999-9999
+          </span>
         </div>
-        <IconButton
-          size="sm"
-          color="blue-gray"
-          variant="text"
-          onClick={toggleIsNavOpen}
-          className="ml-auto mr-2 lg:hidden"
-        >
-          <Bars2Icon className="h-6 w-6" />
-        </IconButton>
-
-        <Button size="sm" variant="text">
-          <span>Log In</span>
-        </Button>
-        <ProfileMenu />
       </div>
-      <MobileNav open={isNavOpen} className="overflow-scroll">
-        <NavList />
-      </MobileNav>
-    </Navbar>
+      <Navbar className="mx-auto max-w-screen-xl p-2 shadow-none lg:pl-6">
+        <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
+          <Typography
+            as="a"
+            href="#"
+            className="mr-4 ml-2 md:mr-auto cursor-pointer py-1.5 font-medium"
+          >
+            HOPE
+          </Typography>
+          <div className="hidden lg:block">
+            <NavList />
+          </div>
+          <div className="min-w-[100px] max-w-[250px] mx-auto">
+            <Input
+              ype="search"
+              color="gray"
+              labelProps={{ className: "hidden" }}
+              
+              placeholder="Search"
+              icon={<MagnifyingGlassIcon />}
+            />
+          </div>
+
+          <IconButton
+            size="sm"
+            color="blue-gray"
+            variant="text"
+            onClick={toggleIsNavOpen}
+            className="ml-auto mr-2 lg:hidden"
+          >
+            <Bars2Icon className="h-6 w-6" />
+          </IconButton>
+          <div className="flex items-center">
+            <div className="  relative">
+              <ShoppingBagIcon className="h-6 w-6 relative" />
+              {cartItemsCount > 0 && (
+                <span className="absolute top-[-10px] right-[-8px] mt-1 mr-1 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">
+                  {cartItemsCount}
+                </span>
+              )}
+            </div>
+
+            <ProfileMenu />
+          </div>
+        </div>
+        <MobileNav open={isNavOpen} className="overflow-scroll">
+          <NavList />
+        </MobileNav>
+      </Navbar>
+    </header>
   );
 }
