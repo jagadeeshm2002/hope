@@ -14,7 +14,7 @@ const mongoose =require('mongoose');
 connectDB() 
 const PORT = process.env.PORT || 3500
 app.use(logger)
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 app.use("/",require("./routes/root"))
