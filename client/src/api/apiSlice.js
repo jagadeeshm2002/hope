@@ -3,11 +3,14 @@ import { setCredentials,logOut } from "../features/auth/authSlice"
 
 const baseQuery =fetchBaseQuery({
     baseUrl: 'http://localhost:3500',
-    credentials:'include',
+    credentials:'same-origin',
+    
     prepareHeaders:(headers,{getState}) =>{
         const token = getState().auth.token
+        
         if(token){
             headers.set("authorization", `Bearer ${token}`)
+            headers.set("Content-Type", "application/json");
         }
         return headers
     }
