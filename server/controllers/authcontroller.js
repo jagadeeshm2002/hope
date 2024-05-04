@@ -18,7 +18,9 @@ const login = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
   const match = await bcrypt.compare(password, foundUser.password);
+  
 
+  
   if (!match) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -88,4 +90,34 @@ const logout = (req, res) => {
   res.json({ message: "cookie cleared" });
 };
 
-module.exports = { login, refresh, logout };
+//@ desc register
+// @route POST /auth
+// @access Public
+
+const register = asyncHandler(async (req, res) => {
+  const { email, password, name, phonenumber } = req.body;
+
+  if (!email || !password || !name || !phonenumber) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(403).json({ message: "already exists" });
+  }
+  const newPassword = await bcrypt.hash(password,10)
+  const newUser = {
+    name,
+    email,
+    password:newPassword,
+    phonenumber,
+  };
+
+  await User.create(newUser);
+
+  res.json({ message: "Registration successful" });
+});
+
+
+
+module.exports = { login, refresh, logout,register };
