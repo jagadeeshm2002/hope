@@ -1,7 +1,9 @@
 import React from "react";
+import { useState } from "react";
 import {
   Navbar,
   MobileNav,
+  Collapse,
   Typography,
   Button,
   Menu,
@@ -22,6 +24,7 @@ import {
   PhoneIcon,
   ShoppingBagIcon,
   MagnifyingGlassIcon,
+  MagnifyingGlassCircleIcon,
 } from "@heroicons/react/24/solid";
 
 // profile menu component
@@ -36,7 +39,7 @@ const profileMenuUser = [
 const ProfileMenuGuest = [{ label: "Login In" }, { lable: "Sign Up" }];
 
 function ProfileMenu() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const closeMenu = () => setIsMenuOpen(false);
 
@@ -120,6 +123,7 @@ function NavList() {
 
 export function Header() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
   const cartItemsCount = 5;
@@ -153,7 +157,7 @@ export function Header() {
         </div>
       </div>
       <Navbar className="mx-auto max-w-screen-xl p-2 shadow-none lg:pl-6">
-        <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
+        <div className="relative mx-0 md:mx-auto flex items-center justify-between text-blue-gray-900">
           <Typography
             as="a"
             href="#"
@@ -164,15 +168,18 @@ export function Header() {
           <div className="hidden lg:block">
             <NavList />
           </div>
-          <div className="min-w-[100px] max-w-[250px] mx-auto">
-            <Input
-              ype="search"
-              color="gray"
-              labelProps={{ className: "hidden" }}
-              
-              placeholder="Search"
-              icon={<MagnifyingGlassIcon />}
-            />
+          <div className="min-w-[100px] max-w-32 md:max-w-[250px] mx-0 md:mx-auto ">
+            <div className="w-36 ">
+              <Input
+                type="search"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search"
+                className="w-40 md:w-full flex items-center focus:border-solid-gray-500 focus:border-t-gray-800  bg-blue-gray-50 px-3 py-1.5 text-sm  text-blue-gray-800 placeholder-blue-gray-500 shadow-none outline-none focus:shadow-none"
+                labelProps={{ className: "hidden" }}
+                icon={<MagnifyingGlassIcon className="h-5 w-5 hidden md:block focus:outline-none  focus:shadow-none placeholder-shown:border-t-0" />}
+              />
+            </div>
           </div>
 
           <IconButton
@@ -197,9 +204,9 @@ export function Header() {
             <ProfileMenu />
           </div>
         </div>
-        <MobileNav open={isNavOpen} className="overflow-scroll">
+        <Collapse open={isNavOpen} className="overflow-scroll">
           <NavList />
-        </MobileNav>
+        </Collapse>
       </Navbar>
     </header>
   );

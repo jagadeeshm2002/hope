@@ -9,6 +9,7 @@ const asyncHandler = require("express-async-handler");
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  
 
   if (!email || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -17,6 +18,7 @@ const login = asyncHandler(async (req, res) => {
   if (!foundUser) {
     return res.status(401).json({ message: "Unauthorized" });
   }
+ 
   const match = await bcrypt.compare(password, foundUser.password);
   
 
@@ -46,6 +48,7 @@ const login = asyncHandler(async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   res.json({ accessToken });
+  
 });
 
 // @desc Refesh
@@ -55,7 +58,7 @@ const login = asyncHandler(async (req, res) => {
 const refresh = (req, res) => {
   const cookies = req.cookies;
 
-  if (!cokkies?.jwt) return res.status(401).json({ message: "Unauthorized" });
+  if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" });
 
   const refreshToken = cookies.jwt;
 
@@ -82,6 +85,7 @@ const refresh = (req, res) => {
     })
   );
 };
+
 
 const logout = (req, res) => {
   const cookies = res.cookies;
