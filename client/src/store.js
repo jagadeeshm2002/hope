@@ -9,5 +9,5 @@ export  const store = configureStore({
     },
     middleware:getDefaultMiddleware =>
     getDefaultMiddleware().concat(apislice.middleware),
-    devTools:true
+    devTools:true,
 })

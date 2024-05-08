@@ -28,7 +28,7 @@ if(result?.error?.originalStatus === 403){
     if(refreshResult?.data){
         const user =api.getState().auth.user
         //store the new token
-        api.dispatch(setCredentials({...refreshResult.data,user}))
+        api.dispatch(setCredentials({...refreshResult.data,user,token:refreshResult.data.accessToken}))
 
         //retry the original query with new access token
         result =await baseQuery(args,api,extraOptions)

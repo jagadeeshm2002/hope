@@ -11,15 +11,19 @@ const connectDB = require('./config/db')
 const mongoose =require('mongoose');
 
 
+
 connectDB() 
 const PORT = process.env.PORT || 3500
 app.use(logger)
-app.use(cors())
+app.use(cors("*"))
 app.use(express.json())
 app.use(cookieParser())
+
+
 app.use("/",require("./routes/root"))
 app.use('/auth',require('./routes/authRoutes'))
 app.use("/users",require('./routes/userRoutes'))
+app.use('/products',require('./routes/productRoutes'))
 // app.get("/", (req, res) => {
 //     res.send("Hello World!");
 // })
