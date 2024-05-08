@@ -13,5 +13,5 @@ const RequireAuth = () =>{
     )
 
 }
-
+//&& token !== "undefined"
 export default RequireAuth

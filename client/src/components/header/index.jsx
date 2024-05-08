@@ -1,8 +1,13 @@
-import React from "react";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import {
+  logOut,
+  selectCurrentToken,
+  selectCurrentUser,
+  selectIsAuthenticated,
+} from "../../features/auth/authSlice";
 import {
   Navbar,
-
   Collapse,
   Typography,
   Button,
@@ -23,7 +28,7 @@ import {
   ShoppingBagIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
-
+import { Link } from "react-router-dom";
 
 // profile menu component
 const profileMenuUser = [
@@ -35,12 +40,20 @@ const profileMenuUser = [
   },
 ];
 
-const ProfileMenuGuest = [{ label: "Login In" }, { label: "Sign Up" }];
+const ProfileMenuGuest = [{ label: "Login" }, { label: "Sign Out" }];
 
 function ProfileMenu() {
+  const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const authenticated = useSelector(selectIsAuthenticated);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const signOut = () => {
+    dispatch(logOut());
+
+    window.location.reload();
+  };
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -59,27 +72,95 @@ function ProfileMenu() {
           />
         </Button>
       </MenuHandler>
-      {/* <MenuList className="p-1">
-        {(isAuthenticated?profileMenuUser:ProfileMenuGuest).map(({ label }, key) => {
-          
-          return (
+      <MenuList className="p-1 !min-w-[150px]">
+        {authenticated === true ? (
+          <>
             <MenuItem
-              key={label}
               onClick={closeMenu}
-              className={`flex items-center gap-2 rounded`}
+              className={`flex items-center gap-2 rounded !p-0`}
+              type="button"
+              
+              
             >
-              <Typography
-                as="span"
-                variant="small"
-                className="font-normal"
-                color="inherit"
-              >
-                {label}
-              </Typography>
+              <Link to={"dashboard"} className=" w-full px-3 py-2">
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="font-normal"
+                  color="inherit"
+                  
+                >
+                  Dashboard
+                </Typography>
+              </Link>
             </MenuItem>
-          );
-        })}
-      </MenuList> */}
+            <MenuItem
+              onClick={closeMenu}
+              className={`flex items-center gap-2 rounded !p-0 hover:bg-red-50 active:bg-red-100`}
+            >
+              <button
+              className="  w-full px-3 py-2"
+                onClick={(e) => {
+                  e.preventDefault()
+                  signOut();
+                }}
+              >
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="font-normal text-red-700"
+                  
+                  
+                >
+                  Sign Out
+                </Typography>
+              </button>
+            </MenuItem>
+          </>
+        ) : (
+          <>
+            <MenuItem
+              onClick={closeMenu}
+              className={`flex items-center gap-2 rounded !p-0`}
+              type="button"
+              
+              
+            >
+              <Link to={"login"} className=" w-full px-3 py-2">
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="font-normal"
+                  
+                  
+                >
+                  Login
+                </Typography>
+              </Link>
+            </MenuItem>
+            <MenuItem
+              onClick={closeMenu}
+              className={`flex items-center gap-2 rounded !p-0`}
+              type="button"
+              
+              
+            >
+              <Link to={"Register"} className=" w-full px-3 py-2">
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="font-normal"
+                  color="inherit"
+                  
+                >
+                  Register
+                </Typography>
+              </Link>
+            </MenuItem>
+            
+          </>
+        )}
+      </MenuList>
     </Menu>
   );
 }
@@ -88,6 +169,9 @@ function ProfileMenu() {
 
 // nav list component
 const navListItems = [
+  {
+    label: "Shop",
+  },
   {
     label: "Men",
   },
@@ -121,13 +205,13 @@ function NavList() {
 }
 
 export function Header() {
-  const [isNavOpen, setIsNavOpen] = React.useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
   const cartItemsCount = 5;
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setIsNavOpen(false)
@@ -178,7 +262,9 @@ export function Header() {
                 labelProps={{
                   className: "hidden",
                 }}
-                icon={<MagnifyingGlassIcon className="h-5 w-5 hidden md:block focus:outline-none  focus:shadow-none placeholder-shown:border-t-0" />}
+                icon={
+                  <MagnifyingGlassIcon className="h-5 w-5 hidden md:block focus:outline-none  focus:shadow-none placeholder-shown:border-t-0" />
+                }
               />
             </div>
           </div>
