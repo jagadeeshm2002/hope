@@ -259,9 +259,9 @@ export function Header() {
           </IconButton>
           <div className="flex items-center">
             <div className="  relative">
-              <ShoppingBagIcon className="h-6 w-6 relative" />
+              <ShoppingBagIcon className="h-6 w-6 relative mr-2" />
               {cartItemsCount > 0 && (
-                <span className="absolute top-[-10px] right-[-8px] mt-1 mr-1 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">
+                <span className="absolute top-[-10px] right-[-8px] mt-1 mr-3 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">
                   {cartItemsCount}
                 </span>
               )}
