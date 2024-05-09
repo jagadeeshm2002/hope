@@ -2,8 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import {
   logOut,
-  selectCurrentToken,
-  selectCurrentUser,
   selectIsAuthenticated,
 } from "../../features/auth/authSlice";
 import {
@@ -30,17 +28,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 
-// profile menu component
-const profileMenuUser = [
-  {
-    label: "Dashboard",
-  },
-  {
-    label: "Sign Out",
-  },
-];
 
-const ProfileMenuGuest = [{ label: "Login" }, { label: "Sign Out" }];
 
 function ProfileMenu() {
   const dispatch = useDispatch();
@@ -79,8 +67,6 @@ function ProfileMenu() {
               onClick={closeMenu}
               className={`flex items-center gap-2 rounded !p-0`}
               type="button"
-              
-              
             >
               <Link to={"dashboard"} className=" w-full px-3 py-2">
                 <Typography
@@ -88,7 +74,6 @@ function ProfileMenu() {
                   variant="small"
                   className="font-normal"
                   color="inherit"
-                  
                 >
                   Dashboard
                 </Typography>
@@ -99,9 +84,9 @@ function ProfileMenu() {
               className={`flex items-center gap-2 rounded !p-0 hover:bg-red-50 active:bg-red-100`}
             >
               <button
-              className="  w-full px-3 py-2"
+                className="  w-full px-3 py-2"
                 onClick={(e) => {
-                  e.preventDefault()
+                  e.preventDefault();
                   signOut();
                 }}
               >
@@ -109,8 +94,6 @@ function ProfileMenu() {
                   as="span"
                   variant="small"
                   className="font-normal text-red-700"
-                  
-                  
                 >
                   Sign Out
                 </Typography>
@@ -123,17 +106,9 @@ function ProfileMenu() {
               onClick={closeMenu}
               className={`flex items-center gap-2 rounded !p-0`}
               type="button"
-              
-              
             >
               <Link to={"login"} className=" w-full px-3 py-2">
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="font-normal"
-                  
-                  
-                >
+                <Typography as="span" variant="small" className="font-normal">
                   Login
                 </Typography>
               </Link>
@@ -142,8 +117,6 @@ function ProfileMenu() {
               onClick={closeMenu}
               className={`flex items-center gap-2 rounded !p-0`}
               type="button"
-              
-              
             >
               <Link to={"Register"} className=" w-full px-3 py-2">
                 <Typography
@@ -151,13 +124,11 @@ function ProfileMenu() {
                   variant="small"
                   className="font-normal"
                   color="inherit"
-                  
                 >
                   Register
                 </Typography>
               </Link>
             </MenuItem>
-            
           </>
         )}
       </MenuList>
@@ -171,34 +142,42 @@ function ProfileMenu() {
 const navListItems = [
   {
     label: "Shop",
+    to: "shop",
   },
   {
     label: "Men",
+    to: "men",
   },
   {
     label: "Women",
+    to: "women",
   },
   {
     label: "kids",
+    to: "kids",
   },
 ];
 
 function NavList() {
   return (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
-      {navListItems.map(({ label }, key) => (
-        <Typography
+      {navListItems.map(({ label, to }) => (
+        <MenuItem
+          className="flex items-center gap-2 lg:rounded-full !p-0"
           key={label}
-          as="a"
-          href="#"
-          variant="small"
-          color="gray"
-          className="font-medium text-blue-gray-500"
         >
-          <MenuItem className="flex items-center gap-2 lg:rounded-full">
-            <span className="text-gray-900"> {label}</span>
-          </MenuItem>
-        </Typography>
+          <Link to={to} className="w-full px-3 py-2">
+            <Typography
+              key={label}
+              as="span"
+              variant="small"
+              color="gray"
+              className="font-medium text-blue-gray-500"
+            >
+              <span className="text-gray-900"> {label}</span>
+            </Typography>
+          </Link>
+        </MenuItem>
       ))}
     </ul>
   );
@@ -243,7 +222,7 @@ export function Header() {
         <div className="relative mx-0 md:mx-auto flex items-center justify-between text-blue-gray-900">
           <Typography
             as="a"
-            href="#"
+            href="/"
             className="mr-4 ml-2 md:mr-auto cursor-pointer py-1.5 font-medium"
           >
             HOPE
