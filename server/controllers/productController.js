@@ -2,24 +2,58 @@ const { Query } = require("mongoose");
 const Product = require("../models/Product");
 const asyncHandler = require("express-async-handler");
 
-const findProducts = async (query) =>
-  Product.find(query, { _id: 0, created: 0, __v: 0 });
+
 
 const products = asyncHandler(async (req, res) => {
-  const query = { ...req.query };
-  const productsData = await findProducts(query);
-  res.json(productsData);
+  try {
+    // // Extract query parameters
+    // const { page = 1, limit = 10, sortBy, sortOrder, ...filters } = req.query;
+
+    // // Construct query with filters
+    // const query = { ...filters };
+    const query = req.query;
+
+    // // Calculate skip value for pagination
+    // const skip = (page - 1) * limit;
+
+    // // Create sorting object based on provided sortBy and sortOrder
+    // const sort = sortBy ? { [sortBy]: sortOrder === 'desc' ? -1 : 1 } : null;
+
+    // Fetch products with pagination and sorting
+    const productsData = await Product.find(query, { _id: 0, created: 0, __v: 0 })
+      // .sort(sort)
+      // .skip(skip)
+      // .limit(parseInt(limit));
+
+    // Return paginated product data
+    res.json(productsData);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
+
 const singleProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { query } = req.query;
-  const productdata = await Product.find(
-    { slug: id },
-    { _id: 0, created: 0, __v: 0 }
-  );
-  res.json(productdata);
+  try {
+    const { slug } = req.params;
+
+    const productdata = await Product.findOne(
+      { slug },
+      { _id: 0, created: 0, __v: 0 }
+    );
+
+    if (!productdata) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    return res.json(productdata);
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 });
+
 
 const uploadProduct = asyncHandler(async (req, res) => {
   await Product.insertMany();
