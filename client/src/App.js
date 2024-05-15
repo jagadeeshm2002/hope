@@ -10,6 +10,7 @@ import Login from "./features/login/Login";
 import RequireAuth from "./features/auth/RequireAuth";
 import HomeScreen from "./pages/home";
 import Shop from "./pages/shop";
+import SingleProduct from "./pages/singleProduct";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="men" element={<Shop category={'men'} />} />
           <Route path="women" element={<Shop category={'women'} />} />
           <Route path="kids" element={<Shop category={'kids'} />} />
+          <Route path="/shop/:slug" element={<SingleProduct />} />
 
           {/* private routes*/}
 
