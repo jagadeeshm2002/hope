@@ -11,11 +11,15 @@ import {
 import { HeartIcon } from "@heroicons/react/24/outline";
 import dummy from "../../assets/dummy-product.jpg";
 import Reviews from "../../components/reviews";
+import { addToCart } from "../cart/cartSlice";
+import { useDispatch } from "react-redux";
+
 
 export default function SingleProduct() {
   const productSlug = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch()
 
   const {
     data: product,
@@ -27,8 +31,20 @@ export default function SingleProduct() {
     status,
     message,
   } = useGetProductQuery(productSlug);
+  console.log(quantity)
 
-  const { name, price, description, category, stock, brand } = product || {};
+
+
+  const {_id:id, name, price, description, category, stock, brand,sku ,imageUrl} = product || {};
+  const {originalPrice,offerPrice} = price || {};
+
+
+
+  function handleAddToCart(e){
+    e.preventDefault()
+    dispatch(addToCart({id,sku,name,offerPrice,quantity,imageUrl}))
+    
+  }
 
   if (isError && error && !isFetching && !isSuccess) {
     return (
@@ -70,10 +86,10 @@ export default function SingleProduct() {
                       variant="h2"
                     >
                       <span className="mx-[3px]">₹</span>
-                      {price}
+                      {offerPrice||price?.offerPrice}
                     </Typography>{" "}
                     <Typography className="!text-gray-800 font-sans line-through decoration-blue-gray-800 font-xs">
-                      ₹129.99
+                      {originalPrice||price?.originalPrice}
                     </Typography>
                   </div>
                   <div className="my-2 flex items-center gap-2 text-sm">
@@ -125,7 +141,7 @@ export default function SingleProduct() {
                   </select>
                 </div>
                 <div className="flex w-2/3">
-                  <Button color="gray" className="w-52">
+                  <Button color="gray" className="w-52" onClick={handleAddToCart}>
                     Add to Cart
                   </Button>
                   <IconButton color="gray" variant="text" className="shrink-0">

@@ -37,7 +37,7 @@ export function ProductList(item) {
         <div className=" border border-gray-300 px-2 py-1 rounded-lg bg-blue-gray-600">
           <p className="text-[15px] font-sans font-bold text-white ">
             <span className="mr-[3px]">₹</span>
-            {price}
+            {price.offerPrice}
           </p>
         </div>
         <div className="flex  flex-row items-center  ">
