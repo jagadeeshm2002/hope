@@ -1,6 +1,6 @@
 const rateLimit = require("express-rate-limit");
 
-const {logEvents} = require("../middlewares/logger");
+const {logEvent} = require("../middlewares/logger");
 
 
 /**
@@ -19,7 +19,7 @@ const loginLimiter = rateLimit({
     // Function called when the rate limit is exceeded
     handler: (req, res, next, options) => {
         // Log the blocked request and send the message in the response
-        logEvents(`Too Many Requests: ${options.message.msg}\t${req.method}\t${req.url}\t${req.headers.origin}`, 'errLog.log');
+        logEvent(`Too Many Requests: ${options.message.msg}\t${req.method}\t${req.url}\t${req.headers.origin}`, 'errLog.log');
         res.status(options.statusCode).send(options.message);
     },
     // Return rate limit info in the `RateLimit-*` headers

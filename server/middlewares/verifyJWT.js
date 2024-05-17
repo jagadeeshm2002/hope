@@ -1,16 +1,28 @@
 const jwt = require("jsonwebtoken");
 
 const verifyJWT = (req, res, next) => {
-  const authHeader = req.headers.authorization || req.headers.Authorization;
+  const header = req.headers.authorization;
 
-  if (!authHeader?.startWith("Bearer ")) {
+  if (!header || !header.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  const token = authHeader.split(" ")[1];
+
+  const token = header.split(" ")[1];
+
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) return res.status(403).json({ message: "Forbidden" });
-    req.email = decoded.UserInfo.email
-    req.isAdmin = decoded.UserInfo.isAdmin
+    if (err) {
+      console.error("Error verifying JWT:", err);
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    if (!decoded || !decoded.Userinfo || !decoded.Userinfo.email) {
+      console.error("Invalid JWT payload:", decoded);
+      return res.status(403).json({ message: "Invalid JWT payload" });
+    }
+
+    req.email = decoded.Userinfo.email;
+    req.isAdmin = decoded.Userinfo.isAdmin;
+
     next();
   });
 };

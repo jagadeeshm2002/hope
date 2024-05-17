@@ -1,63 +1,77 @@
-const Mongoose = require('mongoose');
-const slug = require('mongoose-slug-generator');
+const Mongoose = require("mongoose");
+const slug = require("mongoose-slug-generator");
 const { Schema } = Mongoose;
 
 const options = {
-  separator: '-',
-  lang: 'en',
-  truncate: 120
+  separator: "-",
+  lang: "en",
+  truncate: 120,
 };
 
 Mongoose.plugin(slug, options);
 
 // Product Schema
 const ProductSchema = new Schema({
+  
   sku: {
-    type: String
+    type: String,
   },
   name: {
     type: String,
-    trim: true
+    trim: true,
   },
   slug: {
     type: String,
-    slug: 'name',
-    unique: true
+    slug: "name",
+    unique: true,
   },
   imageUrl: {
-    type: String
+    type: String,
   },
   imageKey: {
-    type: String
+    type: String,
   },
   description: {
     type: String,
-    trim: true
+    trim: true,
   },
   quantity: {
-    type: Number
+    type: Number,
   },
   price: {
-    type: Number
+    originalPrice: {
+      type: Number,
+      required: true,
+    },
+    offerPrice: {
+      type: Number,
+      required: true,
+    },
   },
-  taxable: {
-    type: Boolean,
-    default: false
+  category: {
+    type: [String],
+
+    default:["all"],
   },
+  tags:{
+    type: [String],
+    default:["all"],
+  },
+
   isActive: {
     type: Boolean,
-    default: true
+    default: true,
   },
   brand: {
-    type: Schema.Types.ObjectId,
-    ref: 'Brand',
-    default: null
+    type: String,
+    trim: true,
+    default: "Hope",
   },
   updated: Date,
   created: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = Mongoose.model('Product', ProductSchema);
+module.exports = Mongoose.model("Product", ProductSchema);

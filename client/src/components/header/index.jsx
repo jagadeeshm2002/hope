@@ -1,15 +1,18 @@
-import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import {
+  logOut,
+  selectIsAuthenticated,
+} from "../../features/auth/authSlice";
 import {
   Navbar,
-  MobileNav,
+  Collapse,
   Typography,
   Button,
   Menu,
   MenuHandler,
   MenuList,
   MenuItem,
-  Avatar,
-  Card,
   IconButton,
   Input,
 } from "@material-tailwind/react";
@@ -23,22 +26,23 @@ import {
   ShoppingBagIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
+import { Link ,useNavigate} from "react-router-dom";
+import { selectCartQuantity } from "../../pages/cart/cartSlice";
 
-// profile menu component
-const profileMenuUser = [
-  {
-    label: "Dashboard",
-  },
-  {
-    label: "Sign Out",
-  },
-];
-const ProfileMenuGuest = [{ label: "Login In" }, { lable: "Sign Up" }];
+
 
 function ProfileMenu() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const authenticated = useSelector(selectIsAuthenticated);
   const closeMenu = () => setIsMenuOpen(false);
+
+  const signOut = () => {
+    dispatch(logOut());
+
+    window.location.reload();
+  };
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -57,26 +61,77 @@ function ProfileMenu() {
           />
         </Button>
       </MenuHandler>
-      <MenuList className="p-1">
-        {profileMenuUser.map(({ label }, key) => {
-          const isLastItem = key === profileMenuUser.length - 1;
-          return (
+      <MenuList className="p-1 !min-w-[150px]">
+        {authenticated === true ? (
+          <>
             <MenuItem
-              key={label}
               onClick={closeMenu}
-              className={`flex items-center gap-2 rounded`}
+              className={`flex items-center gap-2 rounded !p-0`}
+              type="button"
             >
-              <Typography
-                as="span"
-                variant="small"
-                className="font-normal"
-                color="inherit"
-              >
-                {label}
-              </Typography>
+              <Link to={"dashboard"} className=" w-full px-3 py-2">
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="font-normal"
+                  color="inherit"
+                >
+                  Dashboard
+                </Typography>
+              </Link>
             </MenuItem>
-          );
-        })}
+            <MenuItem
+              onClick={closeMenu}
+              className={`flex items-center gap-2 rounded !p-0 hover:bg-red-50 active:bg-red-100`}
+            >
+              <button
+                className="  w-full px-3 py-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  signOut();
+                }}
+              >
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="font-normal text-red-700"
+                >
+                  Sign Out
+                </Typography>
+              </button>
+            </MenuItem>
+          </>
+        ) : (
+          <>
+            <MenuItem
+              onClick={closeMenu}
+              className={`flex items-center gap-2 rounded !p-0`}
+              type="button"
+            >
+              <Link to={"login"} className=" w-full px-3 py-2">
+                <Typography as="span" variant="small" className="font-normal">
+                  Login
+                </Typography>
+              </Link>
+            </MenuItem>
+            <MenuItem
+              onClick={closeMenu}
+              className={`flex items-center gap-2 rounded !p-0`}
+              type="button"
+            >
+              <Link to={"Register"} className=" w-full px-3 py-2">
+                <Typography
+                  as="span"
+                  variant="small"
+                  className="font-normal"
+                  color="inherit"
+                >
+                  Register
+                </Typography>
+              </Link>
+            </MenuItem>
+          </>
+        )}
       </MenuList>
     </Menu>
   );
@@ -87,44 +142,59 @@ function ProfileMenu() {
 // nav list component
 const navListItems = [
   {
+    label: "Shop",
+    to: "shop",
+  },
+  {
     label: "Men",
+    to: "men",
   },
   {
     label: "Women",
+    to: "women",
   },
   {
     label: "kids",
+    to: "#",
   },
 ];
 
 function NavList() {
   return (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
-      {navListItems.map(({ label }, key) => (
-        <Typography
+      {navListItems.map(({ label, to }) => (
+        <MenuItem
+          className="flex items-center gap-2 lg:rounded-full !p-0"
           key={label}
-          as="a"
-          href="#"
-          variant="small"
-          color="gray"
-          className="font-medium text-blue-gray-500"
         >
-          <MenuItem className="flex items-center gap-2 lg:rounded-full">
-            <span className="text-gray-900"> {label}</span>
-          </MenuItem>
-        </Typography>
+          <Link to={to} className="w-full px-3 py-2">
+            <Typography
+              key={label}
+              as="span"
+              variant="small"
+              color="gray"
+              className="font-medium text-blue-gray-500"
+            >
+              <span className="text-gray-900"> {label}</span>
+            </Typography>
+          </Link>
+        </MenuItem>
       ))}
     </ul>
   );
 }
 
 export function Header() {
-  const [isNavOpen, setIsNavOpen] = React.useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
+  const navigate = useNavigate()
   const cartItemsCount = 5;
+  const dispatch = useDispatch()
+  const cartQuantity = useSelector(selectCartQuantity)
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener(
       "resize",
       () => window.innerWidth >= 960 && setIsNavOpen(false)
@@ -134,7 +204,7 @@ export function Header() {
   return (
     <header className="shadow">
       <div className="bg-gray-900  flex items-center mx-auto justify-center">
-        <div className="flex items-center max-w-screen-xl justify-between text-blue-gray-900 md:gap-32 lg:gap-48 xl:gap-72 transition-all ">
+        <div className="flex items-center max-w-screen-xl py-1 justify-between text-blue-gray-900 md:gap-32 lg:gap-48 xl:gap-72 transition-all ">
           <span className="hidden md:flex items-center text-gray-100 ">
             <TruckIcon className="h-4 w-4 mr-1" color="white" /> free Shipping
           </span>
@@ -153,10 +223,10 @@ export function Header() {
         </div>
       </div>
       <Navbar className="mx-auto max-w-screen-xl p-2 shadow-none lg:pl-6">
-        <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
+        <div className="relative mx-0 md:mx-auto flex items-center justify-between text-blue-gray-900">
           <Typography
             as="a"
-            href="#"
+            href="/"
             className="mr-4 ml-2 md:mr-auto cursor-pointer py-1.5 font-medium"
           >
             HOPE
@@ -164,15 +234,22 @@ export function Header() {
           <div className="hidden lg:block">
             <NavList />
           </div>
-          <div className="min-w-[100px] max-w-[250px] mx-auto">
-            <Input
-              ype="search"
-              color="gray"
-              labelProps={{ className: "hidden" }}
-              
-              placeholder="Search"
-              icon={<MagnifyingGlassIcon />}
-            />
+          <div className="min-w-[100px] max-w-32 md:max-w-[250px] mx-0 md:mx-auto ">
+            <div className="w-36 ">
+              <Input
+                type="search"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search"
+                className="w-40 md:w-full flex items-center !border !border-gray-300 focus:border-solid-gray-500 focus:border-t-gray-800  bg-blue-gray-50 px-3 py-1.5 text-sm  text-blue-gray-800 placeholder-blue-gray-500 shadow-none outline-none focus:shadow-none active:border-none"
+                labelProps={{
+                  className: "hidden",
+                }}
+                icon={
+                  <MagnifyingGlassIcon className="h-5 w-5 hidden md:block focus:outline-none  focus:shadow-none placeholder-shown:border-t-0" />
+                }
+              />
+            </div>
           </div>
 
           <IconButton
@@ -185,11 +262,11 @@ export function Header() {
             <Bars2Icon className="h-6 w-6" />
           </IconButton>
           <div className="flex items-center">
-            <div className="  relative">
-              <ShoppingBagIcon className="h-6 w-6 relative" />
-              {cartItemsCount > 0 && (
-                <span className="absolute top-[-10px] right-[-8px] mt-1 mr-1 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">
-                  {cartItemsCount}
+            <div className="  relative cursor-pointer">
+              <ShoppingBagIcon className="h-6 w-6 relative mr-2 cursor-pointer" onClick={() => navigate('/cart')}/>
+              {cartQuantity > 0 && (
+                <span className="absolute top-[-10px] right-[-8px] mt-1 mr-3 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">
+                  {cartQuantity}
                 </span>
               )}
             </div>
@@ -197,9 +274,9 @@ export function Header() {
             <ProfileMenu />
           </div>
         </div>
-        <MobileNav open={isNavOpen} className="overflow-scroll">
+        <Collapse open={isNavOpen} className="overflow-scroll">
           <NavList />
-        </MobileNav>
+        </Collapse>
       </Navbar>
     </header>
   );
