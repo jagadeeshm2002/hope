@@ -18,13 +18,19 @@ const CartSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: "User",
     },
-    cartTotal:{
+    cartTotalAmount:{
         type:Number,
     },
-    totalAfterDiscount:{
+    cartTotalQuantity:{
         type:Number,
-    }
-},{timestamps:true})
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+}, {
+    timestamps: true,
+});
 
 module.exports=Mongoose.model("Cart",CartSchema)
 

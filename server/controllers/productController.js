@@ -1,4 +1,3 @@
-const { Query } = require("mongoose");
 const Product = require("../models/Product");
 const asyncHandler = require("express-async-handler");
 
@@ -15,12 +14,11 @@ const products = asyncHandler(async (req, res) => {
 
     // Fetch products with pagination and filtering
     const productsData = await Product.find(filter, {
-      _id: 0,
       created: 0,
       __v: 0,
     })
-    .skip(skip)
-    .limit(parseInt(limit, 10));
+      .skip(skip)
+      .limit(parseInt(limit, 10));
 
     // Return paginated product data
     res.json(productsData);
@@ -34,10 +32,7 @@ const singleProduct = asyncHandler(async (req, res) => {
   try {
     const { slug } = req.params;
 
-    const productdata = await Product.findOne(
-      { slug },
-      { _id: 0, created: 0, __v: 0 }
-    );
+    const productdata = await Product.findOne({ slug }, { created: 0, __v: 0 });
 
     if (!productdata) {
       return res.status(404).json({ message: "Product not found" });
@@ -52,6 +47,7 @@ const singleProduct = asyncHandler(async (req, res) => {
 
 const uploadProduct = asyncHandler(async (req, res) => {
   await Product.insertMany();
+  console.log("data inserted");
   res.json({ message: "data inserted" });
 });
 // const data = {
@@ -64,3 +60,5 @@ const uploadProduct = asyncHandler(async (req, res) => {
 // };
 
 module.exports = { products, uploadProduct, singleProduct };
+
+

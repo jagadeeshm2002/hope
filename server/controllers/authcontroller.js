@@ -45,7 +45,7 @@ const login = asyncHandler(async (req, res) => {
     sameSite: "None",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
-  res.json({ accessToken, user: foundUser.email });
+  res.json({ accessToken, user: foundUser.email,userId:foundUser._id });
 });
 
 // @desc Refesh

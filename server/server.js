@@ -24,6 +24,7 @@ app.use("/",require("./routes/root"))
 app.use('/auth',require('./routes/authRoutes'))
 app.use("/users",require('./routes/userRoutes'))
 app.use('/products',require('./routes/productRoutes'))
+app.use('/cart',require('./routes/cartRoutes'))
 // app.get("/", (req, res) => {
 //     res.send("Hello World!");
 // })
