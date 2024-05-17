@@ -29,7 +29,7 @@ export default function Login() {
       
       dispatch(setCredentials({ ...userData,user:email}));
       setFormValue(initialState)
-      navigate("/welcome");
+      navigate(-1);
     } catch (err) {
       console.log(err)
       if (err?.originalStatus?.status === 400) {

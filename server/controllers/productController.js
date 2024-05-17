@@ -2,28 +2,25 @@ const { Query } = require("mongoose");
 const Product = require("../models/Product");
 const asyncHandler = require("express-async-handler");
 
-
-
 const products = asyncHandler(async (req, res) => {
   try {
-    // // Extract query parameters
-    // const { page = 1, limit = 10, sortBy, sortOrder, ...filters } = req.query;
+    // Extract query parameters
+    const { page = 1, category, limit = 20 } = req.query;
 
-    // // Construct query with filters
-    // const query = { ...filters };
-    const query = req.query;
+    // Calculate skip value for pagination
+    const skip = (page - 1) * limit;
 
-    // // Calculate skip value for pagination
-    // const skip = (page - 1) * limit;
+    // Create a filter object for category
+    const filter = category ? { category } : {};
 
-    // // Create sorting object based on provided sortBy and sortOrder
-    // const sort = sortBy ? { [sortBy]: sortOrder === 'desc' ? -1 : 1 } : null;
-
-    // Fetch products with pagination and sorting
-    const productsData = await Product.find(query, { _id: 0, created: 0, __v: 0 })
-      // .sort(sort)
-      // .skip(skip)
-      // .limit(parseInt(limit));
+    // Fetch products with pagination and filtering
+    const productsData = await Product.find(filter, {
+      _id: 0,
+      created: 0,
+      __v: 0,
+    })
+    .skip(skip)
+    .limit(parseInt(limit, 10));
 
     // Return paginated product data
     res.json(productsData);
@@ -32,7 +29,6 @@ const products = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 const singleProduct = asyncHandler(async (req, res) => {
   try {
@@ -53,7 +49,6 @@ const singleProduct = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 const uploadProduct = asyncHandler(async (req, res) => {
   await Product.insertMany();

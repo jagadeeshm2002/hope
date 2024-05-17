@@ -12,6 +12,7 @@ Mongoose.plugin(slug, options);
 
 // Product Schema
 const ProductSchema = new Schema({
+  
   sku: {
     type: String,
   },
@@ -38,11 +39,23 @@ const ProductSchema = new Schema({
     type: Number,
   },
   price: {
-    type: Number,
+    originalPrice: {
+      type: Number,
+      required: true,
+    },
+    offerPrice: {
+      type: Number,
+      required: true,
+    },
   },
   category: {
-    type: String,
-    requried: true,
+    type: [String],
+
+    default:["all"],
+  },
+  tags:{
+    type: [String],
+    default:["all"],
   },
 
   isActive: {
@@ -50,9 +63,9 @@ const ProductSchema = new Schema({
     default: true,
   },
   brand: {
-    type: Schema.Types.ObjectId,
-    ref: "Brand",
-    default: null,
+    type: String,
+    trim: true,
+    default: "Hope",
   },
   updated: Date,
   created: {

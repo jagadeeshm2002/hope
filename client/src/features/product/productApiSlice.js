@@ -2,7 +2,13 @@ import { apislice } from "../../api/apiSlice";
 const productApi = apislice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: (query) => ({ url: "/products", method: "GET", body: query }),
+      query: ({ category, page }) => {
+        return {
+          url: `/products`,
+          params: { category, page,limit:20 },
+          method: "GET",
+        };
+      },
     }),
     getProduct: builder.query({
       query: (slug) => ({

@@ -5,24 +5,32 @@ import { useGetProductsQuery } from "../../features/product/productApiSlice";
 import { ProductList } from "../../components/productList";
 import { ArrowDownIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
-const Shop = () => {
+export default function({category}) {
   const [priceRange, setPriceRange] = useState([1, 5000]);
   const [priceShow, setPriceShow] = useState(false);
+  const [page, setPage] = useState(1);
 
   const [sortBy, setSortBy] = useState("newest");
+  const shopCategory = category || "all";
 
-  const { data, isloading, error, refetch } = useGetProductsQuery();
-  console.log(data);
-console.log(error);
+ 
+
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    category: shopCategory,
+    page,
+  });
+  console.log(data)
+  console.log(isLoading);
+
   // Check if there is an error and the error message is "Not server response"
 
   return (
-    <div className="bg-red-700 w-full flex justify-center py-12">
-      <div className=" max-w-screen-xl w-[1280px] bg-blue-gray-600">
+    <div className=" w-full flex justify-center py-12 ">
+      <div className=" max-w-screen-xl w-[1280px] ">
         <div className="flex flex-col lg:flex-row w-full gap-4">
           <aside className="w-full lg:w-56">
             <div className="md:space-y-2 px-5">
-              <div className="bg-white border border-gray-400 rounded-md w-full lg:w-52 flex flex-col ">
+              <div className="bg-white border border-gray-300 rounded-md w-full lg:w-52 flex flex-col ">
                 <div className="px-4 py-2 text-md bg-blue-gray-100 rounded-t-md flex justify-between">
                   <p className="font-sans font-bold text-start">Price</p>
                   <button
@@ -33,7 +41,7 @@ console.log(error);
                   </button>
                 </div>
                 <hr
-                  className={`border-gray-500  ${
+                  className={`border-gray-300  ${
                     priceShow ? "block" : "hidden"
                   } lg:block`}
                 />
@@ -55,9 +63,9 @@ console.log(error);
           </aside>
           <section className="w-full md:w-5/7 flex flex-col gap-4 px-4">
             <div className="flex flex-col space-y-2 ">
-              <div className="flex flex-row justify-between  items-center border border-gray-600 px-6 py-2 rounded-lg bg-gray-50">
+              <div className="flex flex-row justify-between  items-center border border-gray-300 px-6 py-2 rounded-lg bg-gray-50">
                 <div>
-                  <p>showing 12 of 24 results</p>
+                  <p>Showing 12 of 24 results</p>
                 </div>
                 <div className="flex flex-row justify-around gap-2 items-center">
                   <p className="font-sans text-start w-full">Sort by</p>
@@ -98,4 +106,4 @@ console.log(error);
   );
 };
 
-export default Shop;
+
