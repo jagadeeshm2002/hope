@@ -26,7 +26,7 @@ import {
   ShoppingBagIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 
 
 
@@ -188,6 +188,7 @@ export function Header() {
   const [searchValue, setSearchValue] = useState("");
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
+  const navigate = useNavigate()
   const cartItemsCount = 5;
 
   useEffect(() => {
@@ -259,7 +260,7 @@ export function Header() {
           </IconButton>
           <div className="flex items-center">
             <div className="  relative">
-              <ShoppingBagIcon className="h-6 w-6 relative mr-2" />
+              <ShoppingBagIcon className="h-6 w-6 relative mr-2" onClick={() => navigate('/cart')}/>
               {cartItemsCount > 0 && (
                 <span className="absolute top-[-10px] right-[-8px] mt-1 mr-3 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">
                   {cartItemsCount}

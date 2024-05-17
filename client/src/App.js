@@ -11,6 +11,7 @@ import RequireAuth from "./features/auth/RequireAuth";
 import HomeScreen from "./pages/home";
 import Shop from "./pages/shop";
 import SingleProduct from "./pages/singleProduct";
+import CartPage from "./pages/cart";
 
 function App() {
   return (
@@ -25,12 +26,13 @@ function App() {
           <Route path="men" element={<Shop category={'men'} />} />
           <Route path="women" element={<Shop category={'women'} />} />
           <Route path="kids" element={<Shop category={'kids'} />} />
-          <Route path="/shop/:slug" element={<SingleProduct />} />
+          <Route path="shop/:slug" element={<SingleProduct />} />
 
           {/* private routes*/}
-
+  c 
           <Route element={<RequireAuth />}>
             <Route path="welcome" element={<Welcome />} />
+            <Route path="cart" element={<CartPage />} />
           </Route>
         </Route>
       </Routes>

@@ -27,14 +27,6 @@ export default function SingleProduct() {
     status,
     message,
   } = useGetProductQuery(productSlug);
-  console.log(isFetching);
-  console.log(isSuccess);
-  console.log(isError);
-  console.log(product);
-  console.log(status);
-  console.log(error);
-  console.log(product);
-  console.log(message);
 
   const { name, price, description, category, stock, brand } = product || {};
 
