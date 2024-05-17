@@ -27,6 +27,7 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
 import { Link ,useNavigate} from "react-router-dom";
+import { selectCartQuantity } from "../../pages/cart/cartSlice";
 
 
 
@@ -154,7 +155,7 @@ const navListItems = [
   },
   {
     label: "kids",
-    to: "kids",
+    to: "#",
   },
 ];
 
@@ -190,6 +191,8 @@ export function Header() {
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
   const navigate = useNavigate()
   const cartItemsCount = 5;
+  const dispatch = useDispatch()
+  const cartQuantity = useSelector(selectCartQuantity)
 
   useEffect(() => {
     window.addEventListener(
@@ -259,11 +262,11 @@ export function Header() {
             <Bars2Icon className="h-6 w-6" />
           </IconButton>
           <div className="flex items-center">
-            <div className="  relative">
-              <ShoppingBagIcon className="h-6 w-6 relative mr-2" onClick={() => navigate('/cart')}/>
-              {cartItemsCount > 0 && (
+            <div className="  relative cursor-pointer">
+              <ShoppingBagIcon className="h-6 w-6 relative mr-2 cursor-pointer" onClick={() => navigate('/cart')}/>
+              {cartQuantity > 0 && (
                 <span className="absolute top-[-10px] right-[-8px] mt-1 mr-3 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">
-                  {cartItemsCount}
+                  {cartQuantity}
                 </span>
               )}
             </div>
