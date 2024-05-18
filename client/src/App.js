@@ -12,6 +12,7 @@ import HomeScreen from "./pages/home";
 import Shop from "./pages/shop";
 import SingleProduct from "./pages/singleProduct";
 import CartPage from "./pages/cart";
+import Dashboard from "./pages/dashboard";
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           {/*public routes */}
           <Route index element={<HomeScreen />} />
-          <Route path="login" element={<Login />} />
+          <Route path="login" element={<Login type="login" />} />
+          <Route path="register" element={<Login type="register"/>} />
           <Route path="shop" element={<Shop category={'all'} />} />
           <Route path="men" element={<Shop category={'men'} />} />
           <Route path="women" element={<Shop category={'women'} />} />
@@ -33,6 +35,7 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="welcome" element={<Welcome />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="dashboard" element={<Dashboard />} />
           </Route>
         </Route>
       </Routes>

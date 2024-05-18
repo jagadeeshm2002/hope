@@ -19,9 +19,7 @@ export default function CartPage() {
   const dispatch = useDispatch();
   const cart = useSelector(selectCart);
   const userId = useSelector(selectUserId);
-  console.log(userId);
-  console.log(cart);
-
+ 
   // Call useAddToCartMutation directly within the component
   // const [addToCart, { isSuccess, isError, errorMessage }] = useAddToCartMutation();
 

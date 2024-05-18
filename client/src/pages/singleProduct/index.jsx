@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useGetProductQuery } from "../../features/product/productApiSlice";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import {
   Button,
   IconButton,
@@ -14,12 +14,12 @@ import Reviews from "../../components/reviews";
 import { addToCart } from "../cart/cartSlice";
 import { useDispatch } from "react-redux";
 
-
 export default function SingleProduct() {
   const productSlug = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  
 
   const {
     data: product,
@@ -31,19 +31,13 @@ export default function SingleProduct() {
     status,
     message,
   } = useGetProductQuery(productSlug);
-  console.log(quantity)
+  
+  const {_id: id, name, price, description, category, stock, brand, sku, imageUrl} = product || {};
+  const { originalPrice, offerPrice } = price || {};
 
-
-
-  const {_id:id, name, price, description, category, stock, brand,sku ,imageUrl} = product || {};
-  const {originalPrice,offerPrice} = price || {};
-
-
-
-  function handleAddToCart(e){
-    e.preventDefault()
-    dispatch(addToCart({id,sku,name,offerPrice,quantity,imageUrl}))
-    
+  function handleAddToCart(e) {
+    e.preventDefault();
+    dispatch(addToCart({ id, sku, name, offerPrice, quantity, imageUrl }));
   }
 
   if (isError && error && !isFetching && !isSuccess) {
@@ -61,6 +55,7 @@ export default function SingleProduct() {
       </div>
     );
   }
+
   if (isLoading)
     return (
       <div className="w-full h-screen flex justify-center items-center">
@@ -72,9 +67,9 @@ export default function SingleProduct() {
     <>
       {product && isSuccess ? (
         <section className="py-16 px-8 bg-blue-gray-50">
-          <div className=" mx-auto container grid place-items-center grid-cols-1 md:grid-cols-2 gap-4">
-            <img src={dummy} alt={name} className="h-[28rem] md:h-[36rem] " />
-            <div className="flex flex-col items-start  h-full  bg-white rounded-md shadow-md p-4">
+          <div className="mx-auto container grid place-items-center grid-cols-1 md:grid-cols-2 gap-4">
+            <img src={dummy} alt={name} className="h-[28rem] md:h-[36rem]" />
+            <div className="flex flex-col items-start h-full bg-white rounded-md shadow-md p-4">
               <div className="flex flex-row justify-between w-full">
                 <div>
                   <Typography className="mb-4" variant="h4">
@@ -86,10 +81,10 @@ export default function SingleProduct() {
                       variant="h2"
                     >
                       <span className="mx-[3px]">₹</span>
-                      {offerPrice||price?.offerPrice}
+                      {offerPrice || price?.offerPrice}
                     </Typography>{" "}
                     <Typography className="!text-gray-800 font-sans line-through decoration-blue-gray-800 font-xs">
-                      {originalPrice||price?.originalPrice}
+                      {originalPrice || price?.originalPrice}
                     </Typography>
                   </div>
                   <div className="my-2 flex items-center gap-2 text-sm">
@@ -107,11 +102,11 @@ export default function SingleProduct() {
                 </div>
                 <div className="hidden lg:block">
                   {stock === 0 && !stock ? (
-                    <Typography className="!mt-4  text-base font !text-white rounded-full border  px-3 py-4 bg-gray-600 hover:bg-gray-700 mx-10">
+                    <Typography className="!mt-4 text-base font !text-white rounded-full border px-3 py-4 bg-gray-600 hover:bg-gray-700 mx-10">
                       Out of stock
                     </Typography>
                   ) : (
-                    <Typography className="!mt-4  text-base font !text-white rounded-full border border-red-500 px-3 py-4 bg-red-600 hover:bg-red-700 mx-10">
+                    <Typography className="!mt-4 text-base font !text-white rounded-full border border-red-500 px-3 py-4 bg-red-600 hover:bg-red-700 mx-10">
                       Sale
                     </Typography>
                   )}
@@ -123,7 +118,7 @@ export default function SingleProduct() {
                 </Typography>
               </div>
 
-              <div className="mx-2  my-4 flex flex-row w-full items-center gap-3 ">
+              <div className="mx-2 my-4 flex flex-row w-full items-center gap-3">
                 <div className="mr-2 w-1/3">
                   <select
                     value={quantity}
@@ -131,10 +126,10 @@ export default function SingleProduct() {
                     min={1}
                     max={10}
                     inputMode="numeric"
-                    className="px-2 py-2 rounded-md w-full border border-gray-400 mx-auto active:border-gray-700 focus:border-gray-700 focus-within:border-gray-700 transition ease-in-out duration-300 "
+                    className="px-2 py-2 rounded-md w-full border border-gray-400 mx-auto active:border-gray-700 focus:border-gray-700 focus-within:border-gray-700 transition ease-in-out duration-300"
                   >
                     {[...Array(5).keys()].map((val) => (
-                      <option key={val + 1} value={val + 1} >
+                      <option key={val + 1} value={val + 1}>
                         {val + 1}
                       </option>
                     ))}
@@ -151,7 +146,9 @@ export default function SingleProduct() {
               </div>
             </div>
           </div>
-          <div className=" mx-auto container my-10 w-full "><Reviews /></div>
+          <div className="mx-auto container my-10 w-full">
+            <Reviews />
+          </div>
         </section>
       ) : (
         <div className="w-full h-screen flex justify-center items-center">

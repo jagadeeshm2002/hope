@@ -5,7 +5,7 @@ const productApi = apislice.injectEndpoints({
       query: ({ category, page }) => {
         return {
           url: `/products`,
-          params: { category, page,limit:20 },
+          params: { category, page,limit:18 },
           method: "GET",
         };
       },

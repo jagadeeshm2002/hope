@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const products = asyncHandler(async (req, res) => {
   try {
     // Extract query parameters
-    const { page = 1, category, limit = 20 } = req.query;
+    const { page = 1, category, limit = 18 } = req.query;
 
     // Calculate skip value for pagination
     const skip = (page - 1) * limit;
@@ -20,8 +20,10 @@ const products = asyncHandler(async (req, res) => {
       .skip(skip)
       .limit(parseInt(limit, 10));
 
+    const total = await Product.countDocuments(filter);
+
     // Return paginated product data
-    res.json(productsData);
+    res.json({ productsData, total, totalPages: Math.ceil(total / limit) });
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -60,5 +62,3 @@ const uploadProduct = asyncHandler(async (req, res) => {
 // };
 
 module.exports = { products, uploadProduct, singleProduct };
-
-

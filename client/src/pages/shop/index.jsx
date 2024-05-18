@@ -1,29 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MultiRangeSlider } from "../../utilities/multiRangeSlider";
 import { Select, Option, Spinner, Button } from "@material-tailwind/react";
 import { useGetProductsQuery } from "../../features/product/productApiSlice";
 import { ProductList } from "../../components/productList";
-import { ArrowDownIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import {  ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Pagination } from "../../utilities/pagination/pagination";
 
-export default function({category}) {
+export default function Shop({ category }) {
   const [priceRange, setPriceRange] = useState([1, 5000]);
   const [priceShow, setPriceShow] = useState(false);
-  const [page, setPage] = useState(1);
+  const [activePage, setActivePage] = useState(1);
 
   const [sortBy, setSortBy] = useState("newest");
   const shopCategory = category || "all";
 
- 
-
-  const { data, isLoading, error, refetch } = useGetProductsQuery({
+  const { isLoading, error, refetch, data } = useGetProductsQuery({
     category: shopCategory,
-    page,
+    page: activePage,
   });
-  console.log(data)
-  console.log(isLoading);
-
+  
+  const { productsData: products, total, totalPages } = data || {};
+  const startCount = (activePage - 1) * 18 + 1;
+  const endCount = activePage * 18 > total ? total : activePage * 18;
+  
   // Check if there is an error and the error message is "Not server response"
+  useEffect(() => {
+    const resetState = () => {
+      setPriceRange([1, 5000]);
+      setPriceShow(false);
+      setActivePage(1);
+      setSortBy("newest");
+    };
 
+    resetState();
+  }, [category]);
   return (
     <div className=" w-full flex justify-center py-12 ">
       <div className=" max-w-screen-xl w-[1280px] ">
@@ -65,7 +75,13 @@ export default function({category}) {
             <div className="flex flex-col space-y-2 ">
               <div className="flex flex-row justify-between  items-center border border-gray-300 px-6 py-2 rounded-lg bg-gray-50">
                 <div>
-                  <p>Showing 12 of 24 results</p>
+                  <p>
+                    Showing
+                    <span className="mx-1">
+                      {startCount}-{endCount}
+                    </span>
+                    of<span className="mx-1">{total}</span>results
+                  </p>
                 </div>
                 <div className="flex flex-row justify-around gap-2 items-center">
                   <p className="font-sans text-start w-full">Sort by</p>
@@ -83,10 +99,10 @@ export default function({category}) {
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
               <div className="grid   grid-cols-2 xl:grid-cols-3 gap-4">
-                {data && data?.length > 0 ? (
-                  data.map((product) => (
+                {products && products?.length > 0 ? (
+                  products.map((product) => (
                     <ProductList item={product} key={product.slug} />
                   ))
                 ) : error ? (
@@ -98,12 +114,17 @@ export default function({category}) {
                   <Spinner />
                 )}
               </div>
+              <div className="mt-10">
+                <Pagination
+                  active={activePage}
+                  setActive={setActivePage}
+                  total={totalPages}
+                />
+              </div>
             </div>
           </section>
         </div>
       </div>
     </div>
   );
-};
-
-
+}
