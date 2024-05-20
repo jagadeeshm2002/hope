@@ -31,7 +31,7 @@ export default function CartPage() {
   }, [addToCart, cart, userId]);
 
   return (
-    <section className="w-full py-16 px-8 ">
+    <section className="w-full py-16 px-8  min-h-[58vh]">
       <div className="container mx-auto ">
         <div className="flex flex-row justify-center items-center mb-10">
           <ShoppingCartIcon width={30} height={30} />

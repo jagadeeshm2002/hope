@@ -22,6 +22,7 @@ export default function Shop({ category }) {
   const { productsData: products, total, totalPages } = data || {};
   const startCount = (activePage - 1) * 18 + 1;
   const endCount = activePage * 18 > total ? total : activePage * 18;
+
   
   // Check if there is an error and the error message is "Not server response"
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function Shop({ category }) {
     resetState();
   }, [category]);
   return (
-    <div className=" w-full flex justify-center py-12 ">
+    <div className=" w-full flex justify-center py-12 min-h-[58vh]">
       <div className=" max-w-screen-xl w-[1280px] ">
         <div className="flex flex-col lg:flex-row w-full gap-4">
           <aside className="w-full lg:w-56">
