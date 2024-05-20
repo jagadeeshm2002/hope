@@ -22,6 +22,8 @@ const products = asyncHandler(async (req, res) => {
 
     const total = await Product.countDocuments(filter);
 
+    
+
     // Return paginated product data
     res.json({ productsData, total, totalPages: Math.ceil(total / limit) });
   } catch (error) {

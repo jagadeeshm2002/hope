@@ -7,7 +7,7 @@ import hero5 from "../../assets/hero_image5.jpg"
 
 const HomeScreen = () => {
   return (
-    <div className="flex flex-col w-full items-center">
+    <div className="flex flex-col w-full items-center min-h-[58vh]">
       <div>
         <div className="rounded-b-2xl">
           <Carousel

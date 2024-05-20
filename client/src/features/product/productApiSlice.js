@@ -22,3 +22,4 @@ const productApi = apislice.injectEndpoints({
 });
 
 export const { useGetProductsQuery, useGetProductQuery } = productApi;
+

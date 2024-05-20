@@ -35,7 +35,7 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="welcome" element={<Welcome />} />
             <Route path="cart" element={<CartPage />} />
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="dashboard/*" element={<Dashboard />} />
           </Route>
         </Route>
       </Routes>

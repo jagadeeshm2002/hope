@@ -31,6 +31,7 @@ export default function SingleProduct() {
     status,
     message,
   } = useGetProductQuery(productSlug);
+
   
   const {_id: id, name, price, description, category, stock, brand, sku, imageUrl} = product || {};
   const { originalPrice, offerPrice } = price || {};
@@ -42,7 +43,7 @@ export default function SingleProduct() {
 
   if (isError && error && !isFetching && !isSuccess) {
     return (
-      <div className="w-full h-screen flex justify-center items-center">
+      <div className="w-full  flex justify-center items-center min-h-[58vh]">
         <Typography className="text-red-500 font-bold">
           something went wrong{" "}
           <span
