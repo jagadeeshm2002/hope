@@ -1,9 +1,26 @@
-import React from 'react'
+import { useState } from "react";
+
+import { Route, Routes } from "react-router-dom";
+
+import Add from "./add";
+import Edit from "./edit";
+import List from "./list";
 
 const Address = () => {
+  
   return (
-    <div>Address</div>
-  )
-}
+    <div className=" w-full">
+      
+      <Routes>
+        <Route path="/" element={<List/>} />
+        <Route path="/edit/:id" element={<Edit/>} />
+        <Route path="/add" element={<Add/>} />
+      </Routes>
 
-export default Address
+      
+    </div>
+  );
+};
+
+export default Address;
+
