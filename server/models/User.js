@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    PhoneNumber: {
+    phoneNumber: {
       type: String,
     },
     updated: Date,
@@ -32,14 +32,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    tokens: [
-      {
-        token: {
-          type: String,
-          required: true,
-        },
-      },
-    ],
+    
   },
   {
     timestamps: true,

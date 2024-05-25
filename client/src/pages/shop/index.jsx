@@ -6,10 +6,14 @@ import { ProductList } from "../../components/productList";
 import {  ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Pagination } from "../../utilities/pagination/pagination";
 
+
+
 export default function Shop({ category }) {
   const [priceRange, setPriceRange] = useState([1, 5000]);
   const [priceShow, setPriceShow] = useState(false);
   const [activePage, setActivePage] = useState(1);
+
+ 
 
   const [sortBy, setSortBy] = useState("newest");
   const shopCategory = category || "all";
@@ -19,10 +23,12 @@ export default function Shop({ category }) {
     page: activePage,
   });
   
+
   const { productsData: products, total, totalPages } = data || {};
   const startCount = (activePage - 1) * 18 + 1;
   const endCount = activePage * 18 > total ? total : activePage * 18;
 
+ 
   
   // Check if there is an error and the error message is "Not server response"
   useEffect(() => {
@@ -104,7 +110,7 @@ export default function Shop({ category }) {
               <div className="grid grid-cols-1  md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {products && products?.length > 0 ? (
                   products.map((product) => (
-                    <ProductList item={product} key={product.slug} />
+                    <ProductList item={product} key={product.slug}  />
                   ))
                 ) : error ? (
                   <div>

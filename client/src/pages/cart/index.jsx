@@ -13,22 +13,34 @@ import {
   getTotals,
 } from "./cartSlice";
 import { selectUserId } from "../../features/auth/authSlice";
-import { useAddToCartMutation } from "./cartApiSlice";
+import { useAddToCartMutation ,useGetCartQuery} from "./cartApiSlice";
+
 
 export default function CartPage() {
   const dispatch = useDispatch();
   const cart = useSelector(selectCart);
   const userId = useSelector(selectUserId);
- 
-  // Call useAddToCartMutation directly within the component
-  // const [addToCart, { isSuccess, isError, errorMessage }] = useAddToCartMutation();
+  const [addToCartMutation, { isSuccess: isAddSuccess, isError: isAddError, error: addError }] = useAddToCartMutation();
+  // const { data: [cartData], isLoading, isFetching } = useGetCartQuery(userId, {
+  //   skip: !userId || cart.cartTotalQuantity > 0
+  // });
+  
+
+  // useEffect(() => {
+  //   if (cartData && cartData.cartTotalQuantity > 0 ) {
+  //     dispatch(addToCart({ cart: cartData }));
+  //   }
+  // }, [cartData, dispatch]);
 
   useEffect(() => {
-    // Ensure both cart and userId are available before calling addToCart
-    if (cart && userId) {
-      addToCart({ userId, cart });
+    if (cart && userId && cart.cartTotalQuantity > 0) {
+      const timer = setTimeout(() => {
+        addToCartMutation({ userId, cart });
+      }, 2000);
+
+      return () => clearTimeout(timer); // Cleanup the timeout if the component unmounts or dependencies change
     }
-  }, [addToCart, cart, userId]);
+  }, [cart, userId, addToCartMutation]);
 
   return (
     <section className="w-full py-16 px-8  min-h-[58vh]">
@@ -51,23 +63,25 @@ export default function CartPage() {
 }
 
 export function CartMenu({ cart, dispatch }) {
-  const { cartItems, cartTotalQuantity } = cart;
+  const { products, cartTotalQuantity } = cart;
+  const userId = useSelector(selectUserId);
 
   const handleClearCart = (e) => {
     e.preventDefault();
     dispatch(clearCart());
+    
   };
-  const handleRemoveCart = (item, e) => {
+  const handleRemoveCart = (product, e) => {
     e.preventDefault();
-    dispatch(removeFromCart(item));
+    dispatch(removeFromCart(product));
   };
-  const handleAddQuantity = (item, e) => {
+  const handleAddQuantity = (product, e) => {
     e.preventDefault();
-    dispatch(addToCart(item));
+    dispatch(addToCart(product));
   };
-  const handleDecreaseQuantity = (item, e) => {
+  const handleDecreaseQuantity = (product, e) => {
     e.preventDefault();
-    dispatch(decreaseCart(item));
+    dispatch(decreaseCart(product));
   };
 
   return (
@@ -105,10 +119,10 @@ export function CartMenu({ cart, dispatch }) {
             <p className="font-semibold text-sm">Price</p>
           </div>
           <div className="w-full  flex flex-col gap-4 mb-3">
-            {cartItems.map((item) => (
+            {products.map((product,index) => (
               <CartMenuList
-                key={item.id}
-                item={item}
+                key={index}
+                product={product}
                 removeCart={handleRemoveCart}
                 addQuantiy={handleAddQuantity}
                 removeQuantity={handleDecreaseQuantity}
@@ -121,7 +135,7 @@ export function CartMenu({ cart, dispatch }) {
   );
 }
 
-export function CartMenuList({ item, removeCart, addQuantiy, removeQuantity }) {
+export function CartMenuList({ product, removeCart, addQuantiy, removeQuantity }) {
   return (
     <div className="w-full rounded-lg shadow shadow-gray-500 flex flex-col  md:flex-row  justify-between p-3">
       <div className="flex flex-row gap-2 items-center w-full md:w-80">
@@ -133,9 +147,9 @@ export function CartMenuList({ item, removeCart, addQuantiy, removeQuantity }) {
         />
         <div className="flex flex-col justify-start ml-3">
           <p className="font-semibold text-md text-start line-clamp-1">
-            {item.name}
+            {product.name}
           </p>
-          <p className="text-start text-sm text-gray-600 ">{item.sku}</p>
+          <p className="text-start text-sm text-gray-600 ">{product.sku}</p>
         </div>
       </div>
       <div className="flex flex-row w-full justify-between my-4 md:my-0">
@@ -143,15 +157,15 @@ export function CartMenuList({ item, removeCart, addQuantiy, removeQuantity }) {
           <button
             type="button"
             className="border-2 rounded-full border-gray-300 w-8 h-8 flex justify-center items-center hover:border-gray-700 transition-all"
-            onClick={(e) => removeQuantity(item, e)}
+            onClick={(e) => removeQuantity(product, e)}
           >
             <MinusIcon width={20} height={20} />
           </button>
-          <p className="font-semibold text-lg">{item.quantity}</p>
+          <p className="font-semibold text-lg">{product.quantity}</p>
           <button
             type="button"
             className="border-2 rounded-full border-gray-300 w-8 h-8 flex justify-center items-center hover:border-gray-700 transition-all"
-            onClick={(e) => addQuantiy(item, e)}
+            onClick={(e) => addQuantiy(product, e)}
           >
             <PlusIcon width={20} height={20} />
           </button>
@@ -159,13 +173,13 @@ export function CartMenuList({ item, removeCart, addQuantiy, removeQuantity }) {
         <div className="flex flex-row items-center justify-around w-1/2">
           <p className="font-semibold text-xl">
             <span className="mx-[3px]">₹</span>
-            {item.offerPrice}
+            {product.offerPrice}
           </p>
           <button type="button" className="text-red-600">
             <XMarkIcon
               width={20}
               height={20}
-              onClick={(e) => removeCart(item, e)}
+              onClick={(e) => removeCart(product, e)}
             />
           </button>
         </div>

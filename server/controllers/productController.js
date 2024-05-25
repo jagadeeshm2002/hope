@@ -1,6 +1,8 @@
 const Product = require("../models/Product");
 const asyncHandler = require("express-async-handler");
 
+
+
 const products = asyncHandler(async (req, res) => {
   try {
     // Extract query parameters

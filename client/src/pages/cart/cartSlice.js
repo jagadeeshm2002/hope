@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
 const initialState = {
-  cartItems: localStorage.getItem("cartItems")
-    ? JSON.parse(localStorage.getItem("cartItems"))
+  products: localStorage.getItem("products")
+    ? JSON.parse(localStorage.getItem("products"))
     : [],
   cartTotalQuantity: localStorage.getItem("cartTotalQuantity")
     ? JSON.parse(localStorage.getItem("cartTotalQuantity"))
@@ -17,25 +18,25 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const itemIndex = state.cartItems.findIndex(
+      const itemIndex = state.products.findIndex(
         (item) => item.id === action.payload.id
       );
-
+      
       if (itemIndex >= 0) {
-        state.cartItems[itemIndex].quantity += +action.payload.quantity || 1;
+        state.products[itemIndex].quantity += 1;
       } else {
         const tempProduct = {
           ...action.payload,
-          quantity: +action.payload.quantity || 1,
+          quantity: 1 ,
         };
-        state.cartItems.push(tempProduct);
+        state.products.push(tempProduct);
       }
 
-      state.cartTotalQuantity += +action.payload.quantity || 1;
+      state.cartTotalQuantity += 1;
       state.cartTotalAmount +=
-        +action.payload.offerPrice * +action.payload.quantity || 1;
+        +action.payload.offerPrice * 1;
 
-      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem("products", JSON.stringify(state.products));
       localStorage.setItem(
         "cartTotalQuantity",
         JSON.stringify(state.cartTotalQuantity)
@@ -46,11 +47,11 @@ const cartSlice = createSlice({
       );
     },
     removeFromCart: (state, action) => {
-      const nextCartItems = state.cartItems.filter(
+      const nextproducts = state.products.filter(
         (item) => item.id !== action.payload.id
       );
 
-      const item = state.cartItems.find(
+      const item = state.products.find(
         (item) => item.id === action.payload.id
       );
       if (item) {
@@ -58,9 +59,9 @@ const cartSlice = createSlice({
         state.cartTotalAmount -= item.price * item.quantity;
       }
 
-      state.cartItems = nextCartItems;
+      state.products = nextproducts;
 
-      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem("products", JSON.stringify(state.products));
       localStorage.setItem(
         "cartTotalQuantity",
         JSON.stringify(state.cartTotalQuantity)
@@ -71,23 +72,23 @@ const cartSlice = createSlice({
       );
     },
     decreaseCart: (state, action) => {
-      const itemIndex = state.cartItems.findIndex(
-        (cartItem) => cartItem.id === action.payload.id
+      const itemIndex = state.products.findIndex(
+        (product) => product.id === action.payload.id
       );
 
-      if (state.cartItems[itemIndex].quantity > 1) {
-        state.cartItems[itemIndex].quantity -= 1;
+      if (state.products[itemIndex].quantity > 1) {
+        state.products[itemIndex].quantity -= 1;
         state.cartTotalQuantity -= 1;
-        state.cartTotalAmount -= state.cartItems[itemIndex].offerPrice;
-      } else if (state.cartItems[itemIndex].quantity === 1) {
+        state.cartTotalAmount -= state.products[itemIndex].offerPrice;
+      } else if (state.products[itemIndex].quantity === 1) {
         state.cartTotalQuantity -= 1;
-        state.cartTotalAmount -= state.cartItems[itemIndex].offerPrice;
-        state.cartItems = state.cartItems.filter(
+        state.cartTotalAmount -= state.products[itemIndex].offerPrice;
+        state.products = state.products.filter(
           (item) => item.id !== action.payload.id
         );
       }
 
-      localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+      localStorage.setItem("products", JSON.stringify(state.products));
       localStorage.setItem(
         "cartTotalQuantity",
         JSON.stringify(state.cartTotalQuantity)
@@ -98,18 +99,19 @@ const cartSlice = createSlice({
       );
     },
     clearCart: (state) => {
-      state.cartItems = [];
+      state.products = [];
       state.cartTotalQuantity = 0;
       state.cartTotalAmount = 0;
+      
 
-      localStorage.removeItem("cartItems");
+      localStorage.removeItem("products");
       localStorage.removeItem("cartTotalQuantity");
       localStorage.removeItem("cartTotalAmount");
     },
     getTotals: (state) => {
-      let { total, quantity } = state.cartItems.reduce(
-        (cartTotal, cartItem) => {
-          const { price, quantity } = cartItem;
+      let { total, quantity } = state.products.reduce(
+        (cartTotal, product) => {
+          const { price, quantity } = product;
           const itemTotal = price * quantity;
 
           cartTotal.total += itemTotal;

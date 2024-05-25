@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetProductQuery } from "../../features/product/productApiSlice";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   IconButton,
@@ -12,15 +12,20 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import dummy from "../../assets/dummy-product.jpg";
 import Reviews from "../../components/reviews";
 import { addToCart } from "../cart/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserId } from "../../features/auth/authSlice";
+import { useAddFavouritesMutation, useDeleteFavouriteMutation, useGetFavouritesQuery } from "../dashboard/dashboardApiSlice";
 
 export default function SingleProduct() {
   const productSlug = window.location.pathname.split("/")[2];
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
-  
+  const userId = useSelector(selectUserId);
+  const [isLiked, setIsLiked] = useState(false);
 
+  const [addLike] = useAddFavouritesMutation();
+  const [removeLike] = useDeleteFavouriteMutation();
   const {
     data: product,
     error,
@@ -31,15 +36,62 @@ export default function SingleProduct() {
     status,
     message,
   } = useGetProductQuery(productSlug);
+  const {
+    data,
+    isLoading: favLoading,
+    refetch,
+  } = useGetFavouritesQuery(userId);
+  const userFavourites = data?.products || [];
 
-  
-  const {_id: id, name, price, description, category, stock, brand, sku, imageUrl} = product || {};
+  const {
+    _id: id,
+    name,
+    price,
+    description,
+    category,
+    stock,
+    brand,
+    sku,
+    imageUrl,
+    slug,
+  } = product || {};
   const { originalPrice, offerPrice } = price || {};
 
   function handleAddToCart(e) {
     e.preventDefault();
     dispatch(addToCart({ id, sku, name, offerPrice, quantity, imageUrl }));
   }
+
+  const handleLike = async (event) => {
+    event.preventDefault();
+    event.stopPropagation(); // Prevents the Link from navigating
+
+    try {
+      const product = { productId: id, name, offerPrice, slug, imageUrl };
+
+      if (isLiked) {
+        await removeLike({ userId, productId: id }).unwrap();
+        setIsLiked(false);
+      } else {
+        await addLike({ userId, product }).unwrap();
+        setIsLiked(true);
+      }
+
+      // Refetch the favorites to ensure the UI updates
+      refetch();
+    } catch (error) {
+      console.error("Cannot like/unlike the product", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userFavourites) {
+      const isProductLiked = userFavourites.some(
+        (favProduct) => favProduct.productId === id
+      );
+      setIsLiked(isProductLiked);
+    }
+  }, [userFavourites, id, isLiked]);
 
   if (isError && error && !isFetching && !isSuccess) {
     return (
@@ -125,7 +177,8 @@ export default function SingleProduct() {
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
                     min={1}
-                    max={10}
+                    max={5}
+                    disabled
                     inputMode="numeric"
                     className="px-2 py-2 rounded-md w-full border border-gray-400 mx-auto active:border-gray-700 focus:border-gray-700 focus-within:border-gray-700 transition ease-in-out duration-300"
                   >
@@ -137,11 +190,25 @@ export default function SingleProduct() {
                   </select>
                 </div>
                 <div className="flex w-2/3">
-                  <Button color="gray" className="w-52" onClick={handleAddToCart}>
+                  <Button
+                    color="gray"
+                    className="w-52"
+                    onClick={handleAddToCart}
+                  >
                     Add to Cart
                   </Button>
                   <IconButton color="gray" variant="text" className="shrink-0">
-                    <HeartIcon className="h-6 w-6" />
+                    <HeartIcon
+                    width={24}
+                    height={24}
+                    onClick={handleLike}
+                      className={` h-6 w-6
+                      ${
+                        isLiked
+                          ? "fill-red-500 stroke-1.5 stroke-red-500"
+                          : "stroke-gray-600 stroke-1.5"
+                      }`}
+                    />
                   </IconButton>
                 </div>
               </div>
