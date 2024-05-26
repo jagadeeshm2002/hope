@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials, logOut } from "../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'hopestore-server.vercel.app',
+    baseUrl: 'https://hopestore-server.vercel.app/',
     credentials: 'include',
     
     prepareHeaders: (headers, { getState }) => {
