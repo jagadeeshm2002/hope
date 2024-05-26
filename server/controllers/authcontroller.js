@@ -25,7 +25,7 @@ const login = asyncHandler(async (req, res) => {
   const accessToken = jwt.sign(
     { user: { email: user.email, isAdmin: user.isAdmin } },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15s" }
+    { expiresIn: "15m" }
   );
 
   const refreshToken = jwt.sign(
@@ -41,7 +41,12 @@ const login = asyncHandler(async (req, res) => {
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
-  res.json({ accessToken, user: user.email, userId: user._id ,message: "logged in successfully"});
+  res.json({
+    accessToken,
+    user: user.email,
+    userId: user._id,
+    message: "logged in successfully",
+  });
 });
 // @desc Refesh
 // @route GET /auth/refresh
@@ -49,8 +54,7 @@ const login = asyncHandler(async (req, res) => {
 
 const refresh = (req, res) => {
   const cookies = req.cookies;
-  console.log(cookies);
-  console.log("jaga")
+ 
 
   if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" });
 
@@ -75,7 +79,8 @@ const refresh = (req, res) => {
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "15m" }
       );
-      res.json({ accessToken });
+      
+      res.status(200).json({ accessToken });
     })
   );
 };
@@ -94,7 +99,7 @@ const logout = (req, res) => {
 const register = asyncHandler(async (req, res) => {
   const { email, password, name } = req.body;
 
-  if (!email || !password || !name ) {
+  if (!email || !password || !name) {
     return res.status(400).json({ message: "All fields are required" });
   }
 

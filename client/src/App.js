@@ -4,7 +4,7 @@ import { Header } from "./components/header";
 import { Footer } from "./components/footer";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
-import Welcome from "./components/Welcome";
+
 import Login from "./features/login/Login";
 
 import RequireAuth from "./features/auth/RequireAuth";
@@ -13,6 +13,8 @@ import Shop from "./pages/shop";
 import SingleProduct from "./pages/singleProduct";
 import CartPage from "./pages/cart";
 import Dashboard from "./pages/dashboard";
+
+import Checkout from "./pages/checkout";
 
 function App() {
   return (
@@ -33,9 +35,10 @@ function App() {
           {/* private routes*/}
   c 
           <Route element={<RequireAuth />}>
-            <Route path="welcome" element={<Welcome />} />
+            
             <Route path="cart" element={<CartPage />} />
             <Route path="dashboard/*" element={<Dashboard />} />
+            <Route path="checkout" element={<Checkout/>}/>
           </Route>
         </Route>
       </Routes>

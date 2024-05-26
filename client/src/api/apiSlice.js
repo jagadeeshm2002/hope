@@ -1,48 +1,51 @@
-import {createApi,fetchBaseQuery} from "@reduxjs/toolkit/query/react"
-import { setCredentials,logOut } from "../features/auth/authSlice"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { setCredentials, logOut } from "../features/auth/authSlice";
 
-const baseQuery =fetchBaseQuery({
+const baseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:3500',
-    credentials:'same-origin',
+    credentials: 'include',
     
-    prepareHeaders:(headers,{getState}) =>{
-        const token = getState().auth.token
+    prepareHeaders: (headers, { getState }) => {
+        const token = getState().auth.token;
         
-        if(token){
-            headers.set("authorization", `Bearer ${token}`)
+        if (token) {
+            headers.set("Authorization", `Bearer ${token}`);
             headers.set("Content-Type", "application/json");
         }
-        return headers
+        
+        return headers;
     }
-})
+});
 
+const baseQueryWithReauth = async (args, api, extraOptions) => {
+    let result = await baseQuery(args, api, extraOptions);
+    
 
-const baseQueryWithReauth = async (args,api,extraOptions)=>{
-    let result =await baseQuery(args,api,extraOptions)
-if(result?.error?.originalStatus === 403){
-    console.log('sending refresh token')
+    if (result?.error?.status === 401) {
+        console.log('Sending refresh token');
 
-    //send refresh token to get new access token
-    const refreshResult = await baseQuery('/auth/refresh',api,extraOptions)
-    console.log(refreshResult);
-    if(refreshResult?.data){
-        const user =api.getState().auth.user
-        //store the new token
-        api.dispatch(setCredentials({...refreshResult.data,user,token:refreshResult.data.accessToken}))
+        // Send refresh token to get new access token
+        const refreshResult = await baseQuery('/auth/refresh', api, extraOptions);
+        
 
-        //retry the original query with new access token
-        result =await baseQuery(args,api,extraOptions)
+        if (refreshResult?.data && refreshResult.data.accessToken) {
+            const user = api.getState().auth.user;
+            const userId = api.getState().auth.userId;
 
-    }else{
-        api.dispatch(logOut())
+            // Store the new token
+            api.dispatch(setCredentials({ ...refreshResult.data, user, token: refreshResult.data.accessToken, userId }));
+
+            // Retry the original query with the new access token
+            result = await baseQuery(args, api, extraOptions);
+        } else {
+            api.dispatch(logOut());
+        }
     }
-}
-return result
 
-}
+    return result; // Move the return statement inside the function
+};
 
 export const apislice = createApi({
-    baseQuery:baseQueryWithReauth,
-    endpoints:builder =>({})
-})
-
+    baseQuery: baseQueryWithReauth,
+    endpoints: builder => ({})
+});

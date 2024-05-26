@@ -47,7 +47,7 @@ export function ProductList({ item }) {
     }
   }, [userFavourites, _id, isLiked]);
 
-  if (favLoading) return <div>Loading...</div>;
+  
 
   return (
     <Link
@@ -67,7 +67,7 @@ export function ProductList({ item }) {
         <div className="flex justify-between items-center">
           <p className="text-lg font-sans line-clamp-1 text-start">{name}</p>
           <div
-            className="mx-1 cursor-pointer border-red-300 border"
+            className="mx-1 cursor-pointer"
             onClick={handleLike}
           >
             <HeartIcon

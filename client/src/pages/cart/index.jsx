@@ -13,34 +13,40 @@ import {
   getTotals,
 } from "./cartSlice";
 import { selectUserId } from "../../features/auth/authSlice";
-import { useAddToCartMutation ,useGetCartQuery} from "./cartApiSlice";
-
+import { useAddToCartMutation, useGetCartQuery } from "./cartApiSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cart = useSelector(selectCart);
   const userId = useSelector(selectUserId);
-  const [addToCartMutation, { isSuccess: isAddSuccess, isError: isAddError, error: addError }] = useAddToCartMutation();
+  const [
+    addToCartMutation,
+    { isSuccess: isAddSuccess, isError: isAddError, error: addError },
+  ] = useAddToCartMutation();
   // const { data: [cartData], isLoading, isFetching } = useGetCartQuery(userId, {
   //   skip: !userId || cart.cartTotalQuantity > 0
   // });
-  
 
   // useEffect(() => {
   //   if (cartData && cartData.cartTotalQuantity > 0 ) {
   //     dispatch(addToCart({ cart: cartData }));
   //   }
   // }, [cartData, dispatch]);
+  const handleContinue = (event) => {
+    event.preventDefault();
+    navigate("/shop");
+  };
 
-  useEffect(() => {
-    if (cart && userId && cart.cartTotalQuantity > 0) {
-      const timer = setTimeout(() => {
-        addToCartMutation({ userId, cart });
-      }, 2000);
-
-      return () => clearTimeout(timer); // Cleanup the timeout if the component unmounts or dependencies change
-    }
-  }, [cart, userId, addToCartMutation]);
+  const handleCheckout = (event) => {
+    event.preventDefault();
+    // if (cart && userId && cart.cartTotalQuantity > 0) {}
+    //   addToCartMutation({ userId, cart });
+      // dispatch(clearCart());
+      navigate("/checkout");
+    
+  };
 
   return (
     <section className="w-full py-16 px-8  min-h-[58vh]">
@@ -54,7 +60,7 @@ export default function CartPage() {
             <CartMenu cart={cart} dispatch={dispatch} />
           </div>
           <div className="w-full lg:w-2/5">
-            <Checkout cart={cart} />
+            <OrderSummary cart={cart} handleContinue={handleContinue} handleCheckout={handleCheckout}/>
           </div>
         </div>
       </div>
@@ -69,7 +75,6 @@ export function CartMenu({ cart, dispatch }) {
   const handleClearCart = (e) => {
     e.preventDefault();
     dispatch(clearCart());
-    
   };
   const handleRemoveCart = (product, e) => {
     e.preventDefault();
@@ -119,7 +124,7 @@ export function CartMenu({ cart, dispatch }) {
             <p className="font-semibold text-sm">Price</p>
           </div>
           <div className="w-full  flex flex-col gap-4 mb-3">
-            {products.map((product,index) => (
+            {products.map((product, index) => (
               <CartMenuList
                 key={index}
                 product={product}
@@ -135,7 +140,12 @@ export function CartMenu({ cart, dispatch }) {
   );
 }
 
-export function CartMenuList({ product, removeCart, addQuantiy, removeQuantity }) {
+export function CartMenuList({
+  product,
+  removeCart,
+  addQuantiy,
+  removeQuantity,
+}) {
   return (
     <div className="w-full rounded-lg shadow shadow-gray-500 flex flex-col  md:flex-row  justify-between p-3">
       <div className="flex flex-row gap-2 items-center w-full md:w-80">
@@ -188,8 +198,8 @@ export function CartMenuList({ product, removeCart, addQuantiy, removeQuantity }
   );
 }
 
-export function Checkout({cart}) {
-  const { cartTotalAmount } = cart;
+export function OrderSummary({ cart, handleContinue, handleCheckout }) {
+  const { cartTotalAmount } = cart ?? {};
 
   return (
     <div className="w-full flex flex-col border p-6 rounded-lg bg-blue-gray-50 gap-2 ">
@@ -198,7 +208,7 @@ export function Checkout({cart}) {
         <p className="text-lg font-medium">Subtotal</p>
         <p className="text-lg font-medium">
           <span className="mx-[3px]">₹</span>
-          { cartTotalAmount|| 0}
+          {cartTotalAmount || 0}
         </p>
       </div>
       <hr className=" border-gray-300" />
@@ -226,13 +236,16 @@ export function Checkout({cart}) {
       <div className="flex flex-row justify-between mb-3">
         <p className="text-lg font-medium">Total</p>
         <p className="text-lg font-medium">
-          <span className="mx-[3px]">₹</span>2000
+          <span className="mx-[3px]">₹</span>
+          {cartTotalAmount || 0}
         </p>
       </div>
 
       <div className="flex flex-col justify-center gap-4">
-        <Button variant="gradient">Checkout</Button>
-        <Button variant="outlined">Continue</Button>
+        <Button variant="gradient" onClick={handleCheckout}>Checkout</Button>
+        <Button variant="outlined" onClick={handleContinue}>
+          Continue
+        </Button>
         <p className="text-sm font-medium text-gray-700">
           Tax included.Shipping Calculated at Checkout
         </p>
