@@ -2,10 +2,10 @@ const express = require('express')
 const router = express.Router()
 const authController = require('../controllers/authController')
 
-const loginLimiter = require('../middlewares/loginLimiter')
+const rateLimiter = require('../middlewares/rateLimiter')
 
 router.route('/')
-    .post(loginLimiter,authController.login)
+    .post(rateLimiter,authController.login)
 
 router.route('/register')
     .post(authController.register)

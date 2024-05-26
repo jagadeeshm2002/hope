@@ -3,7 +3,7 @@ const { Schema } = Mongoose;
 
 // Address Schema
 const AddressSchema = new Schema({
-  user: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: 'User'
   },
@@ -19,18 +19,14 @@ const AddressSchema = new Schema({
   country: {
     type: String
   },
-  zipCode: {
+  pinCode: {
     type: String
   },
   isDefault: {
     type: Boolean,
     default: false
   },
-  updated: Date,
-  created: {
-    type: Date,
-    default: Date.now
-  }
-});
+ 
+},{timestamps: true});
 
 module.exports = Mongoose.model('Address', AddressSchema);

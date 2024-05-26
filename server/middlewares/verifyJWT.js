@@ -11,8 +11,15 @@ const verifyJWT = (req, res, next) => {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      console.error("Error verifying JWT:", err);
-      return res.status(403).json({ message: "Forbidden" });
+      if (err.name === 'TokenExpiredError') {
+        // Token has expired
+        console.error("Expired JWT:", err);
+        return res.status(401).json({ message: "TokenExpiredError" });
+      } else {
+        // Other JWT verification errors
+        console.error("Error verifying JWT:", err);
+        return res.status(403).json({ message: "Forbidden" });
+      }
     }
 
     if (!decoded || !decoded.Userinfo || !decoded.Userinfo.email) {

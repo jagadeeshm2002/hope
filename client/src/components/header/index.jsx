@@ -1,9 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import {
-  logOut,
-  selectIsAuthenticated,
-} from "../../features/auth/authSlice";
+import { logOut, selectIsAuthenticated } from "../../features/auth/authSlice";
 import {
   Navbar,
   Collapse,
@@ -26,10 +23,8 @@ import {
   ShoppingBagIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { selectCartQuantity } from "../../pages/cart/cartSlice";
-
-
 
 function ProfileMenu() {
   const dispatch = useDispatch();
@@ -82,23 +77,19 @@ function ProfileMenu() {
             </MenuItem>
             <MenuItem
               onClick={closeMenu}
-              className={`flex items-center gap-2 rounded !p-0 hover:bg-red-50 active:bg-red-100`}
+              className={`flex items-center gap-2 rounded !p-0 hover:bg-red-50 active:bg-red-100 w-full `}
             >
-              <button
-                className="  w-full px-3 py-2"
+              <Typography
+                as="span"
+                variant="small"
+                className="font-normal text-red-700 px-3 py-2 w-full"
                 onClick={(e) => {
                   e.preventDefault();
                   signOut();
                 }}
               >
-                <Typography
-                  as="span"
-                  variant="small"
-                  className="font-normal text-red-700"
-                >
-                  Sign Out
-                </Typography>
-              </button>
+                Sign Out
+              </Typography>
             </MenuItem>
           </>
         ) : (
@@ -189,10 +180,10 @@ export function Header() {
   const [searchValue, setSearchValue] = useState("");
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const cartItemsCount = 5;
-  const dispatch = useDispatch()
-  const cartQuantity = useSelector(selectCartQuantity)
+  const dispatch = useDispatch();
+  const cartQuantity = useSelector(selectCartQuantity);
 
   useEffect(() => {
     window.addEventListener(
@@ -263,7 +254,10 @@ export function Header() {
           </IconButton>
           <div className="flex items-center">
             <div className="  relative cursor-pointer">
-              <ShoppingBagIcon className="h-6 w-6 relative mr-2 cursor-pointer" onClick={() => navigate('/cart')}/>
+              <ShoppingBagIcon
+                className="h-6 w-6 relative mr-2 cursor-pointer"
+                onClick={() => navigate("/cart")}
+              />
               {cartQuantity > 0 && (
                 <span className="absolute top-[-10px] right-[-8px] mt-1 mr-3 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">
                   {cartQuantity}

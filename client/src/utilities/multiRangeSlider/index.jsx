@@ -6,7 +6,7 @@ import { Rating } from "@material-tailwind/react";
 
 export const MultiRangeSlider = ({ defaultValue, max, onChange, className, slider }) => {
   const [rangeValue, setRangeValue] = useState(defaultValue);
-  console.log(rangeValue);
+  
 
   const rangeChange = (newValue) => {
     setRangeValue(newValue);
