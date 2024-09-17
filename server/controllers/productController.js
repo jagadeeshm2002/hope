@@ -1,18 +1,35 @@
 const Product = require("../models/Product");
 const asyncHandler = require("express-async-handler");
 
-
-
 const products = asyncHandler(async (req, res) => {
   try {
     // Extract query parameters
-    const { page = 1, category, limit = 18 } = req.query;
+    const { page = 1, category, brand, price, limit = 18 } = req.query;
+
+    // Initialize filter object
+    const filter = {};
 
     // Calculate skip value for pagination
     const skip = (page - 1) * limit;
 
-    // Create a filter object for category
-    const filter = category ? { category } : {};
+    // Apply category filter if provided, or default to "all"
+    if (category && category !== "all") {
+      filter.category = { $in: [category] };
+    }
+
+    // Apply brand filter if provided, or default to "Hope"
+    if (brand && brand !== "hope") {
+      filter.brand = brand;
+    }
+
+    // Apply price filter if provided
+    if (price) {
+      const priceRange = price.split(",");
+      if (priceRange.length === 2) {
+        const [minPrice, maxPrice] = priceRange;
+        filter["price.offerPrice"] = { $gte: minPrice, $lte: maxPrice };
+      }
+    }
 
     // Fetch products with pagination and filtering
     const productsData = await Product.find(filter, {
@@ -22,10 +39,11 @@ const products = asyncHandler(async (req, res) => {
       .skip(skip)
       .limit(parseInt(limit, 10));
 
+    // Fetch the total number of matching products
     const total = await Product.countDocuments(filter);
-
-    
-
+    if (productsData.length === 0) {
+      return res.json({ productsData, total, totalPages: 0 });
+    }
     // Return paginated product data
     res.json({ productsData, total, totalPages: Math.ceil(total / limit) });
   } catch (error) {
