@@ -2,7 +2,7 @@ import dummy from "../../assets/dummy-product.jpg";
 import { StarIcon } from "@heroicons/react/24/solid";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUserId } from "../../features/auth/authSlice";
 import { useAddFavouritesMutation, useDeleteFavouriteMutation, useGetFavouritesQuery } from "../../pages/dashboard/dashboardApiSlice";
@@ -14,9 +14,9 @@ export function ProductList({ item }) {
 
   const [addLike] = useAddFavouritesMutation();
   const [removeLike] = useDeleteFavouriteMutation();
-  const { data, isLoading: favLoading, refetch } = useGetFavouritesQuery(userId);
+  const { data, isLoading: favLoading, refetch } = useGetFavouritesQuery(userId,{skip:!userId});
 
-  const userFavourites = data?.products || [];
+  const userFavourites = useMemo(() => data?.products || [], [data]) 
 
   const handleLike = async (event) => {
     event.preventDefault();
@@ -51,7 +51,7 @@ export function ProductList({ item }) {
 
   return (
     <Link
-      className="w-64 flex flex-col p-4 border rounded-xl gap-4 bg-gray-50 h-auto cursor-pointer"
+      className="w-[clamp(300px,30vw,400px] flex flex-col p-4 border rounded-xl gap-4 bg-gray-50 h-auto cursor-pointer"
       to={`/shop/${slug}`}
     >
       <div className="h-52">
