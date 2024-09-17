@@ -26,10 +26,10 @@ function App() {
           <Route index element={<HomeScreen />} />
           <Route path="login" element={<Login type="login" />} />
           <Route path="register" element={<Login type="register"/>} />
-          <Route path="shop" element={<Shop category={'all'} />} />
-          <Route path="men" element={<Shop category={'men'} />} />
-          <Route path="women" element={<Shop category={'women'} />} />
-          <Route path="kids" element={<Shop category={'kids'} />} />
+          <Route path="shop" element={<Shop categoryValue={'all'} />} />
+          <Route path="men" element={<Shop categoryValue={'men'} />} />
+          <Route path="women" element={<Shop categoryValue={'women'}  />} />
+          <Route path="kids" element={<Shop  categoryValue={'kids'} />} />
           <Route path="shop/:slug" element={<SingleProduct />} />
 
           {/* private routes*/}
