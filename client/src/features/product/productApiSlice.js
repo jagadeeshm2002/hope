@@ -2,10 +2,10 @@ import { apislice } from "../../api/apiSlice";
 const productApi = apislice.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: ({ category, page }) => {
+      query: ({price, category, brand,page}) => {
         return {
           url: `/products`,
-          params: { category, page,limit:18 },
+          params: {  price, category, brand, page, limit: 18 },
           method: "GET",
         };
       },
@@ -22,4 +22,3 @@ const productApi = apislice.injectEndpoints({
 });
 
 export const { useGetProductsQuery, useGetProductQuery } = productApi;
-
