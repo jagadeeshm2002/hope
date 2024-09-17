@@ -1,15 +1,15 @@
 import { Option, Select } from "@material-tailwind/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
-function SortByFilter({ total=0, activePage=0 }) {
-  const [sortBy, setSortBy] = useState("newest");
+function SortByFilter({ total=0, activePage=0 ,sortBy, setSortBy}) {
+  
   const startCount = total ===0 ? 0 : (activePage - 1) * 18 + 1;
-  console.log(startCount)
+ 
   const endCount = activePage * 18 > total ? total : activePage * 18;
   useEffect(() => {
     
   },[total])
-  console.log(total,activePage)
+ 
   return (
     <div className="flex flex-col space-y-2  ">
       <div className="flex flex-col sm:flex-row justify-between  items-center border border-gray-300 px-6 py-2 rounded-lg bg-gray-50">
@@ -28,8 +28,8 @@ function SortByFilter({ total=0, activePage=0 }) {
           <Select
             className=" !border !border-gray-300 bg-whitetext-gray-900 "
             labelProps={{ className: "hidden " }}
-            value={sortBy}
-            onChange={(val) => setSortBy(val)}
+            value={sortBy||"newest"}
+            onChange={(value) => setSortBy(value)}
             disabled={total === 0}
             
           >

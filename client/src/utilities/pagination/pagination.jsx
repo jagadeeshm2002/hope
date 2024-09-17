@@ -1,17 +1,17 @@
 import { IconButton, Typography } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
-export function Pagination({ active, setActive, total, error }) {
+export function Pagination({ filter, setFilter, total, error }) {
   const next = () => {
-    if (active === total) return;
+    if (filter.page === total) return;
 
-    setActive(active + 1);
+    setFilter({ ...filter, page: filter.page + 1 });
   };
 
   const prev = () => {
-    if (active === 1) return;
+    if (filter.page === 1) return;
 
-    setActive(active - 1);
+    setFilter({...filter,page: filter.page - 1});
   };
 
   return (
@@ -20,19 +20,19 @@ export function Pagination({ active, setActive, total, error }) {
         size="sm"
         variant="outlined"
         onClick={prev}
-        disabled={error ? true : active === 1}
+        disabled={error ? true : filter.page === 1}
       >
         <ArrowLeftIcon strokeWidth={2} className="h-4 w-4" />
       </IconButton>
       <Typography color="gray" className="font-normal">
-        <strong className="text-gray-900">{active}</strong> of{" "}
+        <strong className="text-gray-900">{filter.page}</strong> of{" "}
         <strong className="text-gray-900">{total || 1}</strong>
       </Typography>
       <IconButton
         size="sm"
         variant="outlined"
         onClick={next}
-        disabled={error ? true : active === 10}
+        disabled={error ? true : filter.page === 10}
       >
         <ArrowRightIcon strokeWidth={2} className="h-4 w-4" />
       </IconButton>

@@ -11,14 +11,16 @@ export const MultiRangeSlider = ({ defaultValue, max, onChange, className, slide
   const rangeChange = (newValue) => {
     setRangeValue(newValue);
   };
-  const onRangeChangeComplete = (value) => {
-    onChange(value);
-  };
-  const priceMarks = {
-    1: { label: <p className='font-sans  text-black'>₹1</p> },
-    5000: { label: <p className='font-sans  text-black'>₹5000</p> }
-  };
   
+  const priceMarks = {
+    1: { label: <p className='font-sans  text-black'>₹{rangeValue[0] || 1} </p> },
+    5000: { label: <p className='font-sans  text-black'>₹{rangeValue[1] || 5000}</p> }
+  };
+  useEffect(() => {
+    setRangeValue(defaultValue);
+  }, [defaultValue]);
+
+
  
 
   return (
@@ -33,7 +35,7 @@ export const MultiRangeSlider = ({ defaultValue, max, onChange, className, slide
             allowCross={false}
             value={rangeValue}
             onChange={rangeChange}
-            onChangeComplete={onRangeChangeComplete}
+            onChangeComplete={value => onChange(value)}
             marks={priceMarks}
           />
     </div>

@@ -1,7 +1,7 @@
 import { Radio} from '@material-tailwind/react';
 import React from 'react'
 
-function BrandFilter() {
+function BrandFilter({value, onChange}) {
     const brandList=["hope"]
   return (
     <div className='w-full my-3 px-1  '>
