@@ -22,10 +22,9 @@ export const MultiRangeSlider = ({ defaultValue, max, onChange, className, slide
  
 
   return (
-    
-      
-        
-          <Slider
+    <div className="my-2 mb-8 px-5 flex  flex-col justify-center items-start">
+      <p className="text-lg font-semibold font-sans mb-1">Price</p>
+    <Slider
             range
             className={className}
             min={1}
@@ -37,6 +36,10 @@ export const MultiRangeSlider = ({ defaultValue, max, onChange, className, slide
             onChangeComplete={onRangeChangeComplete}
             marks={priceMarks}
           />
+    </div>
+      
+        
+          
           
      
   );
