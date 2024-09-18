@@ -15,6 +15,8 @@ import CartPage from "./pages/cart";
 import Dashboard from "./pages/dashboard";
 
 import Checkout from "./pages/checkout";
+import { ToastContainer,Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -25,23 +27,34 @@ function App() {
           {/*public routes */}
           <Route index element={<HomeScreen />} />
           <Route path="login" element={<Login type="login" />} />
-          <Route path="register" element={<Login type="register"/>} />
-          <Route path="shop" element={<Shop categoryValue={'all'} />} />
-          <Route path="men" element={<Shop categoryValue={'men'} />} />
-          <Route path="women" element={<Shop categoryValue={'women'}  />} />
-          <Route path="kids" element={<Shop  categoryValue={'kids'} />} />
+          <Route path="register" element={<Login type="register" />} />
+          <Route path="shop" element={<Shop categoryValue={"all"} />} />
+          <Route path="men" element={<Shop categoryValue={"men"} />} />
+          <Route path="women" element={<Shop categoryValue={"women"} />} />
+          <Route path="kids" element={<Shop categoryValue={"kids"} />} />
           <Route path="shop/:slug" element={<SingleProduct />} />
-
-          {/* private routes*/}
-  c 
+          {/* private routes*/}c
           <Route element={<RequireAuth />}>
-            
             <Route path="cart" element={<CartPage />} />
             <Route path="dashboard/*" element={<Dashboard />} />
-            <Route path="checkout" element={<Checkout/>}/>
+            <Route path="checkout" element={<Checkout />} />
           </Route>
         </Route>
       </Routes>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        limit={3}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+        transition={Slide}
+      />
       <Footer />
     </div>
   );

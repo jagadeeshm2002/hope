@@ -4,32 +4,71 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { selectUserId } from "../../features/auth/authSlice";
-import { useAddFavouritesMutation, useDeleteFavouriteMutation, useGetFavouritesQuery } from "../../pages/dashboard/dashboardApiSlice";
+import {
+  selectIsAuthenticated,
+  selectUserId,
+} from "../../features/auth/authSlice";
+import {
+  useAddFavouritesMutation,
+  useDeleteFavouriteMutation,
+  useGetFavouritesQuery,
+} from "../../pages/dashboard/dashboardApiSlice";
+import { Slide, toast } from "react-toastify";
 
 export function ProductList({ item }) {
-  const { name, description, price: { offerPrice }, slug, _id, imageUrl } = item;
+  const {
+    name,
+    description,
+    price: { offerPrice },
+    slug,
+    _id,
+    imageUrl,
+  } = item;
   const userId = useSelector(selectUserId);
+  const authenticated = useSelector(selectIsAuthenticated);
   const [isLiked, setIsLiked] = useState(false);
 
   const [addLike] = useAddFavouritesMutation();
   const [removeLike] = useDeleteFavouriteMutation();
-  const { data, isLoading: favLoading, refetch } = useGetFavouritesQuery(userId,{skip:!userId});
+  const {
+    data,
+    //  isLoading: favLoading,
+    refetch,
+  } = useGetFavouritesQuery(userId, { skip: !userId });
 
-  const userFavourites = useMemo(() => data?.products || [], [data]) 
+  const userFavourites = useMemo(() => data?.products || [], [data]);
 
   const handleLike = async (event) => {
     event.preventDefault();
     event.stopPropagation(); // Prevents the Link from navigating
 
+    if (!authenticated) {
+      toast.warn("😥 Need to signin", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+
+        theme: "light",
+        transition: Slide,
+      });
+
+      return;
+    }
+
     try {
       const product = { productId: _id, name, offerPrice, slug, imageUrl };
 
       if (isLiked) {
-        await removeLike({ userId, productId: _id }).unwrap();
+        await removeLike(
+          { userId, productId: _id },
+          { skip: !userId }
+        ).unwrap();
         setIsLiked(false);
       } else {
-        await addLike({ userId, product }).unwrap();
+        await addLike({ userId, product }, { skip: !userId }).unwrap();
         setIsLiked(true);
       }
 
@@ -42,12 +81,12 @@ export function ProductList({ item }) {
 
   useEffect(() => {
     if (userFavourites) {
-      const isProductLiked = userFavourites.some(favProduct => favProduct.productId === _id);
+      const isProductLiked = userFavourites.some(
+        (favProduct) => favProduct.productId === _id
+      );
       setIsLiked(isProductLiked);
     }
   }, [userFavourites, _id, isLiked]);
-
-  
 
   return (
     <Link
@@ -66,10 +105,7 @@ export function ProductList({ item }) {
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-center">
           <p className="text-lg font-sans line-clamp-1 text-start">{name}</p>
-          <div
-            className="mx-1 cursor-pointer"
-            onClick={handleLike}
-          >
+          <div className="mx-1 cursor-pointer" onClick={handleLike}>
             <HeartIcon
               width={24}
               height={24}

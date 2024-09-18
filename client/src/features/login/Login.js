@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { setCredentials } from "../auth/authSlice";
 import { Button } from "@material-tailwind/react";
 import loginImage from "../../assets/outline-mobile-login-via-phone-device.png";
+import { Slide, toast } from "react-toastify";
 
 export default function Login({ type }) {
   const navigate = useNavigate();
@@ -56,6 +57,19 @@ export const LoginForm = () => {
   const [formErrors, setFormErrors] = useState({});
   const [success, setSuccess] = useState("");
 
+  const toastify = (message) =>
+    toast(message, {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+
+      theme: "light",
+      transition: Slide,
+    });
+
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
@@ -74,17 +88,20 @@ export const LoginForm = () => {
         dispatch(setCredentials({ ...userData, user: email }));
         const { message } = userData;
         setSuccess(message);
+        toastify(message);
         setFormValue(initialState);
         setTimeout(() => navigate(-1), 2000);
-        
       } catch (err) {
         console.log(err);
         if (err?.status === 400) {
           setErrorMessage("Missing email or password");
+          toastify("Missing email or password");
         } else if (err?.status === 401) {
           setErrorMessage(err?.data?.error);
+          toastify(err?.data?.error);
         } else {
           setErrorMessage("Login failed");
+          toastify("Login failed");
         }
       }
     }
@@ -143,8 +160,8 @@ export const LoginForm = () => {
             value={formValue.email}
             name="email"
             onChange={onChangeHandler}
+            autoComplete="email webauthn"
             className="border rounded-sm p-2 w-full"
-            
           />
           <p className="text-red-700 text-sm ml-1">{formErrors.email}</p>
         </div>
@@ -193,27 +210,43 @@ export const RegisterForm = () => {
   const navigate = useNavigate();
 
   const [register, { isLoading }] = useRegisterMutation();
+  const toastify = (message) =>
+    toast(message, {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
 
+      theme: "light",
+      transition: Slide,
+    });
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validator(formValue);
     setFormErrors(errors);
+    toastify(errors);
 
     if (Object.keys(errors).length === 0) {
       try {
         const { name, email, password } = formValue;
         const { message } = await register({ name, email, password }).unwrap();
         setSuccess(message);
+        toastify(message);
 
         setFormValue(initialState);
         setTimeout(() => navigate("/login"), 3000);
       } catch (err) {
         if (err?.originalStatus?.status === 400) {
           setErrorMessage("All fields are required");
+          toastify("All fields are required");
         } else if (err.originalStatus?.status === 409) {
           setErrorMessage("User already exists");
+          toastify("User already exists");
         } else {
           setErrorMessage("Registration failed");
+          toastify("Registration failed");
         }
       }
     }

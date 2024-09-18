@@ -1,9 +1,10 @@
 import React from "react";
-import { Carousel, IconButton } from "@material-tailwind/react";
+import { Carousel, IconButton} from "@material-tailwind/react";
 import hero1 from "../../assets/hero1.jpg";
 import hero2 from "../../assets/hero2.jpg";
-import hero4 from "../../assets/hero_image4.jpg"
-import hero5 from "../../assets/hero_image5.jpg"
+import hero4 from "../../assets/hero_image4.jpg";
+import hero5 from "../../assets/hero_image5.jpg";
+import "react-toastify/dist/ReactToastify.css";
 
 const HomeScreen = () => {
   return (

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setCredentials, logOut } from "../features/auth/authSlice";
+import { setCredentials,signOut } from "../features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
     baseUrl: process.env.REACT_APP_BASE_URL,
@@ -38,7 +38,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
             // Retry the original query with the new access token
             result = await baseQuery(args, api, extraOptions);
         } else {
-            api.dispatch(logOut());
+            api.dispatch(signOut());
         }
     }
 
