@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import { logOut, selectIsAuthenticated } from "../../features/auth/authSlice";
+import {signOut, selectIsAuthenticated } from "../../features/auth/authSlice";
 import {
   Navbar,
   Collapse,
@@ -25,6 +25,8 @@ import {
 } from "@heroicons/react/24/solid";
 import { Link, useNavigate } from "react-router-dom";
 import { selectCartQuantity } from "../../pages/cart/cartSlice";
+import { toast, Slide } from "react-toastify";
+import { useLogoutMutation } from "../../features/auth/authApiSlice";
 
 function ProfileMenu() {
   const dispatch = useDispatch();
@@ -32,12 +34,29 @@ function ProfileMenu() {
 
   const authenticated = useSelector(selectIsAuthenticated);
   const closeMenu = () => setIsMenuOpen(false);
+  const toastify = () =>
+    toast("Logged Out", {
+      position: "bottom-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
 
-  const signOut = () => {
-    dispatch(logOut());
+      theme: "light",
+      transition: Slide,
+    });
+  const [logout] = useLogoutMutation();
+  const handleSignOut = async () => {
+    await logout();
+    dispatch(signOut());
+    
 
-    window.location.reload();
+    toastify();
+
+    
   };
+  
 
   return (
     <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -85,7 +104,7 @@ function ProfileMenu() {
                 className="font-normal text-red-700 px-3 py-2 w-full"
                 onClick={(e) => {
                   e.preventDefault();
-                  signOut();
+                  handleSignOut();
                 }}
               >
                 Sign Out
@@ -181,9 +200,27 @@ export function Header() {
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
   const navigate = useNavigate();
-  const cartItemsCount = 5;
-  const dispatch = useDispatch();
+  const authenticated = useSelector(selectIsAuthenticated);
+
   const cartQuantity = useSelector(selectCartQuantity);
+  const handleCartClick = () => {
+    if (!authenticated) {
+      toast.warn("Needed to sign in", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide,
+      });
+    }
+    if (authenticated) {
+      navigate("/cart");
+    }
+  };
 
   useEffect(() => {
     window.addEventListener(
@@ -256,7 +293,7 @@ export function Header() {
             <div className="  relative cursor-pointer">
               <ShoppingBagIcon
                 className="h-6 w-6 relative mr-2 cursor-pointer"
-                onClick={() => navigate("/cart")}
+                onClick={() => handleCartClick()}
               />
               {cartQuantity > 0 && (
                 <span className="absolute top-[-10px] right-[-8px] mt-1 mr-3 flex border-gray-100 border items-center justify-center rounded-full bg-red-600 w-4 h-4 text-white text-xs font-semibold">

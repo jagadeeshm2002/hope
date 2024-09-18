@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  user: localStorage.getItem("user") || null,
-  userId: localStorage.getItem("userId") || null,
-  token: localStorage.getItem("token") || null,
-  isAuthenticated: localStorage.getItem("token") ? true : false,
+  user: sessionStorage.getItem("user") || null,
+  userId: sessionStorage.getItem("userId") || null,
+  token: sessionStorage.getItem("token") || null,
+  isAuthenticated: sessionStorage.getItem("token") ? true : false,
 };
 
 const authSlice = createSlice({
@@ -14,9 +14,9 @@ const authSlice = createSlice({
     setCredentials: (state, action) => {
       const { user, accessToken, userId } = action.payload;
 
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("user", user);
-      localStorage.setItem("userId", userId);
+      sessionStorage.setItem("token", accessToken);
+      sessionStorage.setItem("user", user);
+      sessionStorage.setItem("userId", userId);
 
       return {
         ...state,
@@ -26,17 +26,17 @@ const authSlice = createSlice({
         userId: userId,
       };
     },
-    logOut: () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      localStorage.removeItem("userId");
+    signOut: () => {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      sessionStorage.removeItem("userId");
 
       return initialState;
     },
   },
 });
 
-export const { setCredentials, logOut } = authSlice.actions;
+export const { setCredentials, signOut } = authSlice.actions;
 
 export const checkAuthentication = () => (dispatch, getState) => {
   const { token } = getState().auth;
@@ -44,13 +44,13 @@ export const checkAuthentication = () => (dispatch, getState) => {
   if (token) {
     dispatch(
       setCredentials({
-        user: localStorage.getItem("user"),
-        userId: localStorage.getItem("userId"),
+        user: sessionStorage.getItem("user"),
+        userId: sessionStorage.getItem("userId"),
         accessToken: token,
       })
     );
   } else {
-    dispatch(logOut());
+    dispatch(signOut());
   }
 };
 
