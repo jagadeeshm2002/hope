@@ -6,6 +6,7 @@ const allowedOrigins =[
     "https://hopestore-ecommerce.vercel.app",
     "https://hopestore-server.vercel.app",
     "https://hope-3ys7-iq2l2067q-jagadeeshm2002s-projects.vercel.app",
+    "https://api.github.com/",
     
 
 ]
