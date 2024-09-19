@@ -28,6 +28,8 @@ app.use('/cart',require('./routes/cartRoutes'))
 app.post('/webhook', (req, res) => {
     const event = req.headers['x-github-event'];
     const payload = req.body;
+    console.log(`Received event: ${event}`);
+    console.log(payload)
 
     if (event === 'issue_comment') {
         const comment = payload.comment.body;
