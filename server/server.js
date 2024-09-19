@@ -29,21 +29,26 @@ app.post('/webhook', (req, res) => {
     const event = req.headers['x-github-event'];
     const payload = req.body;
 
-    if (event === 'pull_request') {
-        const action = payload.action;
-        const pullRequest = payload.pull_request;
+    if (event === 'issue_comment') {
+        const comment = payload.comment.body;
+        const issue = payload.issue;
 
-        console.log(`Pull Request ${action}: #${pullRequest.number} by ${pullRequest.user.login}`);
+        console.log(`New comment on issue #${issue.number}: ${comment}`);
 
-        // Check if the pull request body contains a bounty command
-        if (pullRequest.body.includes('/bounty')) {
-            console.log('Bounty found:', pullRequest.body);
-            // Extract bounty information and process it here
+        // Check if the comment contains the "/bounty" command
+        if (comment.includes('/bounty')) {
+            // Extract bounty information (you might want to improve this parsing)
+            const bountyAmount = comment.match(/\/bounty\s*(\d+)/);
+            if (bountyAmount) {
+                console.log(`Bounty command detected: $${bountyAmount[1]}`);
+                // Handle the bounty logic here (e.g., save to database, notify users)
+            }
         }
     }
 
     res.status(200).send('Webhook received');
 });
+
 
 // app.get("/", (req, res) => {
 //     res.send("Hello World!");
